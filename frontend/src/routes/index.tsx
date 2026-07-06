@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LandingPage } from '../features/landing';
 import { SubmissionFormPage, ComingSoonPlaceholder } from '../features/submission';
+import { VoiceRecordingPage } from '../features/submission/voice';
 
 export const router = createBrowserRouter([
   {
@@ -13,13 +14,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/submit/voice',
-    element: (
-      <ComingSoonPlaceholder
-        stepNumber={2}
-        stepTitle="Voice"
-        featurePack="FP-1.4"
-      />
-    ),
+    element: <VoiceRecordingPage />,
   },
   {
     path: '/submit/images',
