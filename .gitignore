@@ -1,0 +1,42 @@
+# Node / Frontend
+node_modules/
+dist/
+.eslintcache
+.vite/
+*.local
+
+# Python / Backend
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Environment configurations (Never commit secrets)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+frontend/.env
+backend/.env
+
+# IDE / System
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Docker
+docker-compose.override.yml

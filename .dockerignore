@@ -1,0 +1,13 @@
+# Ignore local package manager dependencies
+frontend/node_modules/
+backend/.venv/
+
+# Ignore builds and cache
+frontend/dist/
+backend/__pycache__/
+backend/*.pyc
+.git/
+.vscode/
+.idea/
+.DS_Store
+*.log

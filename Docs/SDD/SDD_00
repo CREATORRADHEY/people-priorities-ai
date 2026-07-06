@@ -1,0 +1,364 @@
+Project Initialization
+Status
+Status : Ready
+
+Priority : P0
+
+Estimated Time : 45–60 minutes
+
+Dependencies : None
+Objective
+
+Initialize a production-grade project with a scalable folder structure, tooling, configuration, and local development environment.
+
+This Feature Pack introduces zero business logic.
+
+Business Value
+
+Without this Feature Pack:
+
+No developer can start.
+No service can run.
+No deployment is possible.
+
+This is the engineering foundation.
+
+Deliverables
+
+After FP-1.1 we should have:
+
+✅ Git Repository
+
+✅ React App Running
+
+✅ FastAPI Running
+
+✅ Firebase Connected
+
+✅ Gemini Connected
+
+✅ Docker Ready
+
+✅ Environment Variables
+
+✅ Health API
+
+Repository Structure
+
+This is LOCKED.
+
+people-priorities-ai/
+
+│
+├── docs/
+│
+├── frontend/
+│
+├── backend/
+│
+├── shared/
+│
+├── infra/
+│
+├── scripts/
+│
+├── .github/
+│
+├── docker-compose.yml
+│
+├── README.md
+│
+├── LICENSE
+│
+└── .gitignore
+Frontend Structure
+frontend/
+
+src/
+
+│
+├── app/
+
+├── assets/
+
+├── components/
+
+│      ├── ui/
+
+│      └── common/
+
+├── features/
+
+│      ├── submission/
+
+│      ├── dashboard/
+
+│      ├── maps/
+
+│      └── priority/
+
+├── hooks/
+
+├── layouts/
+
+├── lib/
+
+├── routes/
+
+├── services/
+
+├── styles/
+
+├── types/
+
+├── utils/
+
+└── main.tsx
+Backend Structure
+backend/
+
+app/
+
+│
+├── api/
+
+│      ├── routes/
+
+│      └── dependencies/
+
+│
+├── core/
+
+│      ├── config.py
+
+│      ├── logging.py
+
+│      └── security.py
+
+│
+├── db/
+
+├── ai/
+
+├── models/
+
+├── schemas/
+
+├── repositories/
+
+├── services/
+
+├── middleware/
+
+├── utils/
+
+├── tests/
+
+│
+├── main.py
+
+└── requirements.txt
+Infrastructure
+infra/
+
+firebase/
+
+docker/
+
+deployment/
+Shared Folder
+shared/
+
+constants/
+
+types/
+
+schemas/
+
+This is reserved for contracts shared between frontend and backend.
+
+Technology Stack
+Layer	Technology
+Frontend	React + Vite + TypeScript
+Styling	Tailwind CSS
+Backend	FastAPI
+Validation	Pydantic
+Database	Firestore
+Storage	Firebase Storage
+AI	Gemini API
+Maps	Google Maps
+Deployment	Firebase Hosting + Cloud Run
+Container	Docker
+Environment Variables
+Frontend
+VITE_API_URL=
+
+VITE_FIREBASE_API_KEY=
+
+VITE_FIREBASE_AUTH_DOMAIN=
+
+VITE_FIREBASE_PROJECT_ID=
+
+VITE_FIREBASE_STORAGE_BUCKET=
+
+VITE_FIREBASE_APP_ID=
+
+VITE_GOOGLE_MAPS_KEY=
+Backend
+GEMINI_API_KEY=
+
+GOOGLE_APPLICATION_CREDENTIALS=
+
+FIREBASE_PROJECT_ID=
+
+ENVIRONMENT=development
+
+LOG_LEVEL=INFO
+APIs Created
+
+Only one.
+
+GET /health
+
+Response
+
+{
+  "status":"healthy",
+  "service":"people-priorities-ai",
+  "version":"1.0.0"
+}
+
+Nothing else.
+
+Files To Create
+Root
+README.md
+
+LICENSE
+
+.gitignore
+
+docker-compose.yml
+Frontend
+package.json
+
+vite.config.ts
+
+tailwind.config.ts
+
+tsconfig.json
+Backend
+requirements.txt
+
+main.py
+
+config.py
+
+logging.py
+Acceptance Criteria
+
+The Feature Pack is complete when:
+
+□ React starts
+
+□ FastAPI starts
+
+□ GET /health returns 200
+
+□ Firebase SDK initializes
+
+□ Gemini SDK initializes
+
+□ Docker compose starts
+
+□ No build errors
+
+□ README exists
+
+□ Folder structure finalized
+Smoke Tests
+
+Run:
+
+Frontend
+
+↓
+
+localhost:5173
+
+Works.
+
+Backend
+
+↓
+
+localhost:8000/health
+
+Returns
+
+Healthy
+
+Firebase
+
+↓
+
+Connection Successful
+
+Gemini
+
+↓
+
+Test Prompt
+
+↓
+
+Returns
+
+Connected
+
+Docker
+
+↓
+
+Starts
+
+No errors.
+
+Git Commit
+feat(init): initialize project foundation
+Merge Criteria
+
+Only merge if
+
+Folder structure matches SDD
+Health endpoint works
+Environment variables documented
+README updated
+Smoke tests pass
+Deliverable
+
+At the end of FP-1.1:
+
+Browser
+
+↓
+
+React
+
+↓
+
+FastAPI
+
+↓
+
+Health API
+
+↓
+
+Firebase Connected
+
+↓
+
+Gemini Connected
+
+This is our first working vertical slice.

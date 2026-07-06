@@ -1,0 +1,270 @@
+📄 Document 00
+Project Vision
+
+Version: 1.0
+Status: Draft → Review → Locked
+Owner: Product & Engineering Team
+Last Updated: July 2026
+
+1. Executive Summary
+Project Name
+
+People's Priorities AI (Working Name)
+
+A Multilingual AI Decision Intelligence Platform for Constituency Development Planning.
+
+Vision Statement
+
+To empower Members of Parliament and constituency planning teams with an AI-powered decision intelligence platform that transforms fragmented citizen feedback, public datasets, and infrastructure information into explainable, evidence-backed development priorities.
+
+Rather than replacing human decision-making, the platform augments it by providing trusted recommendations, supporting evidence, and measurable impact analysis.
+
+Elevator Pitch
+
+Today, development planning is reactive.
+
+Citizens submit complaints through dozens of disconnected channels including meetings, WhatsApp, grievance portals, letters, and social media.
+
+MP offices manually process these requests with little visibility into recurring needs or objective prioritization.
+
+People's Priorities AI acts as an intelligence layer that continuously understands citizen needs, combines them with government datasets and geospatial information, and recommends the highest-impact development works an MP can undertake.
+
+2. Problem Statement
+Current Situation
+
+Development requests are scattered across multiple channels.
+
+Citizen feedback is:
+
+Unstructured
+Multilingual
+Difficult to analyze
+Often duplicated
+Rarely linked with supporting public data
+
+As a result:
+
+recurring problems remain hidden
+decisions rely heavily on manual judgement
+limited development budgets are difficult to prioritize objectively
+MPs lack explainable evidence to justify project selection
+Core Problem
+
+How can AI transform fragmented citizen inputs into evidence-backed, explainable development priorities that enable faster, fairer, and more transparent public decision-making?
+
+3. Mission
+
+Build an AI platform that enables government representatives to make development decisions based on collective citizen needs, public evidence, and measurable impact rather than fragmented requests alone.
+
+4. Product Vision
+
+The platform should become the intelligence layer between citizens and government.
+
+Instead of functioning as a complaint management system, it should continuously analyze community needs, identify infrastructure gaps, and recommend the projects capable of delivering the highest public impact.
+
+5. Product Philosophy
+
+Our platform follows five core beliefs.
+
+Principle 1
+
+Citizens describe problems.
+
+They rarely know the optimal solution.
+
+AI should infer the underlying development need.
+
+Principle 2
+
+AI assists.
+
+Humans decide.
+
+Final authority always remains with elected representatives and government officials.
+
+Principle 3
+
+Every recommendation must be explainable.
+
+No black-box outputs.
+
+Every priority should be supported by evidence.
+
+Principle 4
+
+Public data is as important as citizen feedback.
+
+Citizen sentiment alone should never determine infrastructure priorities.
+
+Principle 5
+
+The platform optimizes for public impact rather than popularity.
+
+Projects should maximize measurable community benefit.
+
+6. Target Users
+Primary Users
+Member of Parliament
+MP Office Staff
+Constituency Planning Teams
+Secondary Users
+Citizens
+District Planning Officers
+Government Departments
+Field Engineers
+7. Value Proposition
+For Citizens
+Simple multilingual reporting
+Voice-first accessibility
+Transparent participation
+Confidence that concerns contribute to planning
+For MP Offices
+Reduced manual workload
+AI-assisted issue analysis
+Community-level insights
+Explainable prioritization
+For Government Departments
+Better project planning
+Evidence-backed work proposals
+Faster coordination
+Structured issue data
+8. Scope
+Included
+Multilingual citizen submissions
+Voice, text, and image input
+AI understanding
+Issue clustering
+Public data enrichment
+Priority scoring
+Explainable recommendations
+MP dashboard
+Excluded (MVP)
+Project execution tracking
+Contractor management
+Budget approval workflows
+Citizen authentication
+Political analytics
+Predictive election insights
+Department ERP integration
+
+These can be considered in future phases.
+
+9. Product Objectives
+
+The MVP should successfully demonstrate:
+
+Objective 1
+
+Capture citizen feedback through multiple modalities.
+
+Objective 2
+
+Automatically understand and structure citizen inputs.
+
+Objective 3
+
+Detect recurring community issues.
+
+Objective 4
+
+Combine issues with public datasets.
+
+Objective 5
+
+Generate evidence-backed priority rankings.
+
+Objective 6
+
+Produce explainable decision briefs for MPs.
+
+10. Success Metrics
+
+The prototype will be considered successful if it can:
+
+Functional
+Accept multilingual submissions
+Analyze images and voice
+Cluster similar issues
+Produce a ranked list of development priorities
+Generate explainable recommendations
+Technical
+End-to-end processing
+Modular architecture
+Cloud deployment
+AI-driven reasoning
+Deterministic scoring
+User
+
+An MP should be able to answer three questions within five minutes:
+
+What should I prioritize?
+Why should I prioritize it?
+What evidence supports this recommendation?
+11. MVP Definition
+
+The MVP consists of six complete pipelines:
+
+Citizen Submission
+
+↓
+
+AI Understanding
+
+↓
+
+Issue Intelligence
+
+↓
+
+Evidence Engine
+
+↓
+
+Priority Engine
+
+↓
+
+MP Dashboard
+
+Every pipeline must work independently and integrate seamlessly with the next.
+
+12. Non-Goals
+
+The MVP is not intended to:
+
+Replace government planning
+Replace grievance portals
+Predict political outcomes
+Automate administrative approvals
+Replace human judgement
+
+Its purpose is to support informed decision-making.
+
+13. Long-Term Vision
+
+Future versions may include:
+
+WhatsApp integration
+Predictive infrastructure planning
+Budget optimization
+Digital twin of constituencies
+Department workflow integration
+Real-time IoT data
+Satellite-based infrastructure monitoring
+Agentic AI planning assistants
+Statewide and national analytics
+14. Guiding Principle
+
+Transform fragmented citizen voices into structured public intelligence that enables transparent, explainable, and evidence-backed development decisions.
+
+15. Vision Checklist
+
+Before any new feature is approved, it must satisfy these questions:
+
+Does it improve development decision-making?
+Does it create measurable public value?
+Is AI solving a genuine problem rather than being decorative?
+Can the recommendation be explained to a non-technical MP?
+Does it fit within the modular pipeline architecture?
+
+If the answer to any of these is No, the feature does not belong in the MVP.
