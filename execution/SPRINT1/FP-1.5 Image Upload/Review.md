@@ -2,32 +2,37 @@
 
 ## Status
 
-Pending Review
+✅ Approved
 
 ---
 
 ## Checklist
 
-- [x] File picker works
-- [x] Camera capture supported (native attributes)
-- [x] Preview grid renders
+- [x] File picker implemented
+- [x] Camera capture implemented
+- [x] Preview grid implemented
 - [x] Remove image works
-- [x] Validation works (max size, file type, zero-byte rejection)
-- [x] Max image limit enforced (max 3)
-- [x] Object URLs cleaned (revoked on delete/unmount)
-- [x] Continue navigation works (routes to `/submit/review`)
-- [x] No backend dependency
+- [x] Max image limit enforced
+- [x] File size validation
+- [x] File type validation
+- [x] Zero-byte validation
+- [x] Duplicate detection
+- [x] Object URL cleanup
+- [x] SubmissionDraft updated
 - [x] Build passes
 
 ---
 
-## Technical Notes
+## Notes
 
-- Implemented `useSubmissionDraft` custom hook to share state across wizard routes in memory.
-- Preview URLs generated inside `useImageUpload` hook and cleaned up on delete/unmount (completely separated from the domain state `SubmissionDraft`).
-- Validation enforces: max 3 images, 5MB size limit, JPG/PNG/WEBP formats, and zero-byte rejections.
-- Insertion order is preserved when appending new files.
+- Shared SubmissionDraft architecture introduced.
+- UI preview state separated from domain model.
+- Ready for FP-1.6.
 
 ---
 
-Reviewed By: Antigravity Code Assistant
+Final Decision
+
+✅ APPROVED
+
+Reviewed By: Tech Lead
