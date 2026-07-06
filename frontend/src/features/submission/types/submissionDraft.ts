@@ -1,15 +1,21 @@
 import { SubmissionFormValues } from './submission';
 
+export interface SubmissionImage {
+  id: string;
+  file: File;
+  mimeType: string;
+  size: number;
+}
+
 export interface SubmissionDraft {
   information?: SubmissionFormValues;
 
   voice?: {
     blob?: Blob;
-    url?: string;
     duration?: number;
   };
 
-  images?: any[]; // For future image attachments
+  images?: SubmissionImage[];
 
   location?: {
     latitude?: number;
