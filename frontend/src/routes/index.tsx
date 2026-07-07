@@ -5,6 +5,7 @@ import { VoiceRecordingPage } from '../features/submission/voice';
 import { ImageUploadPage } from '../features/submission/images';
 import { LocationPage } from '../features/submission/location';
 import { ReviewPage, SuccessPlaceholderPage } from '../features/submission/review';
+import { DashboardPage } from '../features/dashboard';
 
 export const router = createBrowserRouter([
   {
@@ -35,4 +36,9 @@ export const router = createBrowserRouter([
     path: '/submit/success',
     element: <SuccessPlaceholderPage />,
   },
+  {
+    path: '/dashboard',
+    element: <DashboardPage />,
+  },
 ]);
+
