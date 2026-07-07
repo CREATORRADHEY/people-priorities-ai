@@ -1,14 +1,66 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Landmark, ArrowRight } from 'lucide-react';
 import ProgressBar from '../../components/ProgressBar';
-import ImageUploader from '../components/ImageUploader';
+import LocationPermission from '../components/LocationPermission';
+import ManualLocationForm from '../components/ManualLocationForm';
+import LocationCard from '../components/LocationCard';
+import { useLocation } from '../hooks/useLocation';
 
-export default function ImageUploadPage() {
+export default function LocationPage() {
   const navigate = useNavigate();
+  const { location, gpsState, gpsError, captureGPSLocation, updateManualLocation, clearLocation } = useLocation();
+  const [isManualActive, setIsManualActive] = useState(false);
 
   const handleContinue = () => {
-    // Navigate to Step 4: Location
-    navigate('/submit/location');
+    if (location) {
+      navigate('/submit/review');
+    }
+  };
+
+  const handleManualSave = (locality: string, ward: string, landmark: string) => {
+    updateManualLocation(locality, ward, landmark);
+    setIsManualActive(false);
+  };
+
+  const handleManualCancel = () => {
+    setIsManualActive(false);
+  };
+
+  const handleClear = () => {
+    clearLocation();
+    setIsManualActive(false);
+  };
+
+  // Determine what layout card to render
+  const renderIntake = () => {
+    if (location) {
+      return (
+        <LocationCard
+          location={location}
+          onClear={handleClear}
+        />
+      );
+    }
+
+    if (isManualActive) {
+      return (
+        <ManualLocationForm
+          onSave={handleManualSave}
+          onCancel={handleManualCancel}
+          initialValues={location}
+        />
+      );
+    }
+
+    return (
+      <LocationPermission
+        onCapture={captureGPSLocation}
+        onManualClick={() => setIsManualActive(true)}
+        state={gpsState}
+        error={gpsError}
+      />
+    );
   };
 
   return (
@@ -37,23 +89,23 @@ export default function ImageUploadPage() {
           {/* Heading and Back Link */}
           <div className="space-y-4">
             <Link
-              to="/submit/voice"
+              to="/submit/images"
               className="inline-flex items-center text-sm font-semibold text-slate-400 hover:text-white transition-colors"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back
             </Link>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              Upload Images
+              Location
             </h1>
           </div>
 
-          {/* Progress bar: Step 3 of 4 (Images) */}
-          <ProgressBar currentStep={3} />
+          {/* Progress bar: Step 4 of 5 (Location) */}
+          <ProgressBar currentStep={4} />
 
-          {/* Image Uploader panel */}
+          {/* Location Intake Panel */}
           <div className="py-4">
-            <ImageUploader />
+            {renderIntake()}
           </div>
 
           {/* Action buttons */}
@@ -61,7 +113,12 @@ export default function ImageUploadPage() {
             <button
               type="button"
               onClick={handleContinue}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 cursor-pointer shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
+              disabled={!location}
+              className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white transition-all shadow-lg ${
+                location
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 cursor-pointer shadow-blue-500/20 hover:shadow-blue-500/30"
+                  : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50"
+              }`}
             >
               Continue
               <ArrowRight className="h-4 w-4" />

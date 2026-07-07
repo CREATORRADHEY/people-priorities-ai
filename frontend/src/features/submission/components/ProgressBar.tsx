@@ -8,7 +8,8 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
     { number: 1, label: "Information" },
     { number: 2, label: "Voice" },
     { number: 3, label: "Images" },
-    { number: 4, label: "Review" }
+    { number: 4, label: "Location" },
+    { number: 5, label: "Review" }
   ];
 
   return (
@@ -28,7 +29,7 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
       </div>
 
       {/* Step Indicators */}
-      <div className="grid grid-cols-4 gap-2 text-center text-[10px] sm:text-xs">
+      <div className="grid grid-cols-5 gap-2 text-center text-[10px] sm:text-xs">
         {steps.map((step) => {
           const isActive = step.number === currentStep;
           const isCompleted = step.number < currentStep;
