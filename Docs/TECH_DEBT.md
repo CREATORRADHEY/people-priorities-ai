@@ -8,7 +8,7 @@ This document tracks identified technical debt, bundle optimizations, and code q
 
 ### TECH-DEBT-001: Optimize Frontend Bundle Size
 
-- **Description**: The production bundle size has increased to ~1005 KB after adding form controls, voice recording assets, and image uploads, which is large for a standard static landing and form layout.
+- **Description**: The production bundle size has increased to ~1016 KB after adding form controls, voice recording assets, image uploads, and location capture, which is large for a standard static landing and form layout.
 - **Impact**: Slow initial page load times and higher bandwidth usage.
 - **Proposed Actions**:
   - Lazy load routes using React's `lazy` and `Suspense`.
