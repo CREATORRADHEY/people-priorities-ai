@@ -1,0 +1,422 @@
+📄 BAD-01
+Backend Architecture Document
+
+Version: 1.0
+Status: Ready
+Scope: Sprint 2 Foundation
+
+1. Purpose
+
+BAD-01 defines the complete backend architecture for People's Priorities AI.
+
+It specifies:
+
+API architecture
+Service boundaries
+Repository pattern
+Firestore collections
+Firebase Storage layout
+Validation
+Logging
+Error handling
+AI integration points
+Future scalability
+
+This document is the single source of truth for backend development.
+
+2. Backend Principles
+
+We will follow these principles throughout the project:
+
+Thin Controllers
+Business Logic in Services
+Data Access through Repositories
+Shared Schemas
+Stateless APIs
+Structured Logging
+Idempotent Operations where possible
+Versioned APIs
+3. Backend Architecture
+                Frontend
+                    │
+                    ▼
+            FastAPI Router
+                    │
+                    ▼
+             Request Validation
+              (Pydantic Schemas)
+                    │
+                    ▼
+          Application Service Layer
+                    │
+      ┌─────────────┴─────────────┐
+      ▼                           ▼
+ Repository Layer          Storage Service
+      │                           │
+      ▼                           ▼
+ Firestore                 Firebase Storage
+      │
+      ▼
+ AI Pipeline (Future)
+4. Project Structure
+backend/
+
+app/
+
+├── api/
+│   ├── routes/
+│   ├── dependencies/
+│   └── middleware/
+│
+├── core/
+│   ├── config.py
+│   ├── logging.py
+│   ├── exceptions.py
+│   └── security.py
+│
+├── schemas/
+│
+├── models/
+│
+├── services/
+│
+├── repositories/
+│
+├── storage/
+│
+├── ai/
+│
+├── db/
+│
+├── utils/
+│
+└── tests/
+5. API Versioning
+
+Every endpoint begins with:
+
+/api/v1/
+
+Example:
+
+POST /api/v1/submissions
+
+Never expose unversioned APIs.
+
+6. Standard Response Format
+Success
+{
+  "success": true,
+  "requestId": "...",
+  "data": {},
+  "message": "Submission accepted"
+}
+Error
+{
+  "success": false,
+  "requestId": "...",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "...",
+    "details": []
+  }
+}
+
+Every response includes a requestId.
+
+7. Request Lifecycle
+HTTP Request
+      │
+      ▼
+Request ID Middleware
+      │
+      ▼
+Logging Middleware
+      │
+      ▼
+Pydantic Validation
+      │
+      ▼
+Router
+      │
+      ▼
+Service
+      │
+      ▼
+Repository
+      │
+      ▼
+Firestore
+8. Firestore Design
+
+Collections:
+
+submissions/
+
+analysis/
+
+audit_logs/
+submissions
+submissionId
+
+information
+
+voice
+
+images
+
+location
+
+status
+
+createdAt
+
+updatedAt
+analysis (Future)
+analysisId
+
+submissionId
+
+themes
+
+priorityScore
+
+sentiment
+
+language
+
+summary
+
+recommendations
+audit_logs
+requestId
+
+action
+
+status
+
+timestamp
+
+actor
+9. Firebase Storage
+storage/
+
+submissions/
+
+{submissionId}/
+
+voice/
+
+audio.webm
+
+images/
+
+image_1.jpg
+
+image_2.jpg
+
+image_3.jpg
+
+No files stored in Firestore.
+
+Only metadata.
+
+10. Service Layer
+
+Each service owns one responsibility.
+
+SubmissionService
+
+StorageService
+
+AnalysisService
+
+NotificationService (Future)
+
+Services never access HTTP objects.
+
+11. Repository Layer
+
+Repositories own Firestore access.
+
+SubmissionRepository
+
+AuditRepository
+
+Services never call Firestore directly.
+
+12. Validation Strategy
+Layer 1
+
+Pydantic
+
+↓
+
+Request schema
+
+Layer 2
+
+Business rules
+
+↓
+
+Service
+
+Example:
+
+Title exists
+
+↓
+
+Schema
+
+Title meaningful
+
+↓
+
+Service
+13. Logging
+
+Every request logs:
+
+requestId
+
+endpoint
+
+method
+
+duration
+
+status
+
+errors
+
+Never log:
+
+API keys
+Audio
+Images
+Personal information
+14. Error Codes
+VALIDATION_ERROR
+
+NOT_FOUND
+
+UNAUTHORIZED
+
+STORAGE_ERROR
+
+DATABASE_ERROR
+
+AI_ERROR
+
+INTERNAL_ERROR
+
+These codes are stable.
+
+Messages may change.
+
+15. Request ID Format
+SUB-20260707-000001
+
+Generated before entering the service layer.
+
+16. AI Pipeline (Future)
+Submission Created
+        │
+        ▼
+Transcription
+        │
+        ▼
+Translation
+        │
+        ▼
+Issue Classification
+        │
+        ▼
+Theme Extraction
+        │
+        ▼
+Priority Scoring
+        │
+        ▼
+Recommendation Engine
+
+No AI runs during FP-2.1.
+
+17. Security
+
+For MVP:
+
+Input validation
+File type validation
+File size validation
+CORS configuration
+
+Future:
+
+JWT
+Rate limiting
+Authentication
+Authorization
+18. Testing Strategy
+
+Every endpoint should have:
+
+Unit tests (service)
+Integration tests (API)
+Repository tests (Firestore emulator when introduced)
+19. Feature Pack Mapping
+Feature Pack	Responsibility
+FP-2.1	Submission API
+FP-2.2	Firestore + Storage
+FP-2.3	End-to-End Submission
+FP-2.4	Admin Dashboard API
+FP-2.5	AI Analysis Pipeline
+20. Definition of Done
+
+BAD-01 is complete when:
+
+ Backend architecture defined
+ API lifecycle documented
+ Service boundaries defined
+ Repository pattern established
+ Firestore collections designed
+ Storage hierarchy defined
+ Response format standardized
+ Error handling standardized
+ Logging strategy documented
+ AI integration points identified
+
+
+
+ 
+🔷 Two Recommendations 
+
+These are the only additions I'd make to BAD-01 because they'll pay off immediately:
+
+1. Add OpenAPI as a First-Class Deliverable
+
+FastAPI generates OpenAPI automatically. Treat it as part of the architecture.
+
+Document:
+
+/docs      → Swagger UI
+/redoc     → ReDoc
+/openapi.json
+
+Every new endpoint must appear correctly in the generated API documentation.
+
+2. Define Firestore Status Lifecycle Now
+
+Rather than storing a generic status string, standardize it from the beginning:
+
+DRAFT
+    ↓
+RECEIVED
+    ↓
+PROCESSING_AI
+    ↓
+REVIEW_READY
+    ↓
+RESOLVED
