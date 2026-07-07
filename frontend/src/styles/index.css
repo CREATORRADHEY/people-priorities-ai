@@ -3,27 +3,194 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #020617;
+  color-scheme: light;
+  color: #0B0B0C;
+  background-color: #FAF9F6;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Custom Design Tokens */
+  --bg-canvas: #FAF9F6;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F4F3EF;
+  --border-subtle: #E6E4DD;
+  --border-strong: #0B0B0C;
+  --text-primary: #0B0B0C;
+  --text-secondary: #6B6964;
+  --text-subtle: #9B9892;
+  
+  --accent-blue: #0F52BA;
+  --accent-rose: #C2185B;
+  --accent-emerald: #1B5E20;
+
+  /* Custom Motion Curves */
+  --ease-spring-subtle: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring-snappy: cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #020617;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
 }
 
 #root {
   width: 100%;
+}
+
+/* Premium Utility Primitives */
+
+/* 1. Typography */
+.text-display-big {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+.text-editorial-header {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.text-label-mono {
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* 2. Surfaces & Shadows */
+.card-premium {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  transition: all 0.3s var(--ease-spring-subtle);
+  box-shadow: 0 4px 12px rgba(11, 11, 12, 0.015);
+}
+
+.card-premium:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 28px rgba(11, 11, 12, 0.04);
+}
+
+/* 3. Inputs & Forms */
+.input-premium {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  color: var(--text-primary);
+  transition: all 0.2s var(--ease-spring-subtle);
+  outline: none;
+}
+
+.input-premium:focus {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
+}
+
+/* 4. Actions & Buttons */
+.btn-primary-pill {
+  border-radius: 9999px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  background-color: var(--border-strong);
+  color: var(--bg-surface);
+  transition: all 0.2s var(--ease-spring-snappy);
+}
+
+.btn-primary-pill:hover {
+  background-color: #2D2D30;
+  transform: scale(1.02);
+}
+
+.btn-primary-pill:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary-pill {
+  border-radius: 9999px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s var(--ease-spring-subtle);
+}
+
+.btn-secondary-pill:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.btn-secondary-pill:active {
+  transform: scale(0.98);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+/* 3D Parallax & Custom Animations */
+@keyframes grid-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+.bg-grid-lines {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+  animation: grid-drift 20s linear infinite;
+}
+
+/* Pulse Glows */
+.glow-pulse {
+  box-shadow: 0 0 0 0 rgba(11, 11, 12, 0.4);
+  animation: glow 2s infinite var(--ease-spring-subtle);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(11, 11, 12, 0.2);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(11, 11, 12, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(11, 11, 12, 0);
+  }
 }

@@ -1,84 +1,99 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Landmark } from 'lucide-react';
-import { NAVBAR } from '../constants/content';
+import { Landmark, Globe, ChevronDown } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const languages = [
+    { code: 'en', label: 'English' },
+    { code: 'hi', label: 'Hindi (हिन्दी)' },
+    { code: 'ta', label: 'Tamil (தமிழ்)' },
+    { code: 'kn', label: 'Kannada (ಕನ್ನಡ)' }
+  ];
+
+  const currentLangLabel = languages.find(l => l.code === language)?.label || 'English';
+
+  const selectLanguage = (code: string) => {
+    setLanguage(code);
+    setDropdownOpen(false);
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#FAF9F6]/80 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex justify-between items-center h-20">
+          
           {/* Logo / Brand */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors">
-              <Landmark className="h-6 w-6" />
-              <span className="font-bold text-lg text-white tracking-tight">{NAVBAR.brand}</span>
+          <Link to="/" className="flex items-center space-x-2.5 text-slate-900 hover:text-slate-700 transition-colors">
+            <Landmark className="h-5 w-5 text-slate-950" />
+            <span className="font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base">
+              {t('brandName')}
+            </span>
+          </Link>
+
+          {/* Nav Links (Desktop) */}
+          <div className="hidden md:flex items-center space-x-8 text-xs font-bold uppercase tracking-wider">
+            <a href="#home" className="text-slate-600 hover:text-slate-950 transition-colors">
+              {t('navHome')}
+            </a>
+            <a href="#how-it-works" className="text-slate-600 hover:text-slate-950 transition-colors">
+              {t('navHowItWorks')}
+            </a>
+            <a href="#features" className="text-slate-600 hover:text-slate-950 transition-colors">
+              {t('navFeatures')}
+            </a>
+            <Link to="/dashboard" className="text-slate-600 hover:text-slate-950 transition-colors">
+              {t('navDashboard')}
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <div className="flex space-x-6">
-              {NAVBAR.links.map((link, idx) => (
-                <a
-                  key={idx}
-                  href={link.href}
-                  className="text-slate-300 hover:text-blue-400 font-medium text-sm transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+          {/* Action Area (Language Selector & CTA) */}
+          <div className="flex items-center gap-4">
+            
+            {/* Custom Language Dropdown Selector */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                <Globe className="h-3.5 w-3.5 text-slate-500" />
+                <span>{currentLangLabel}</span>
+                <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-fadeIn text-xs font-semibold">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => selectLanguage(lang.code)}
+                      className={`w-full text-left px-4 py-2.5 hover:bg-slate-55 transition-colors cursor-pointer ${
+                        language === lang.code ? 'text-slate-950 font-bold bg-slate-50' : 'text-slate-600'
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* CTA Button */}
             <Link
               to="/submit"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-all shadow-md shadow-blue-900/30 hover:scale-105"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-slate-950 hover:bg-slate-800 transition-colors shadow-md hover:scale-[1.02]"
             >
-              {NAVBAR.cta}
+              {t('navReportIssue')}
             </Link>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
-              aria-controls="mobile-menu"
-              aria-expanded={isOpen}
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-slate-800 px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          {NAVBAR.links.map((link, idx) => (
-            <a
-              key={idx}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
-          <div className="pt-4 pb-2 border-t border-slate-800 px-3">
-            <Link
-              to="/submit"
-              onClick={() => setIsOpen(false)}
-              className="block w-full text-center px-4 py-2.5 rounded-lg text-base font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-md"
-            >
-              {NAVBAR.cta}
-            </Link>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

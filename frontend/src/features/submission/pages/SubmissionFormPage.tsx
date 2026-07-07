@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Landmark, Send } from 'lucide-react';
 import ProgressBar from '../components/ProgressBar';
@@ -7,109 +7,120 @@ import TextArea from '../components/TextArea';
 import CategorySelect from '../components/CategorySelect';
 import LanguageSelect from '../components/LanguageSelect';
 import { useSubmissionForm } from '../hooks/useSubmissionForm';
+import { useLanguage } from '../../landing/context/LanguageContext';
+import { useSubmissionDraft } from '../hooks/useSubmissionDraft';
 
 export default function SubmissionFormPage() {
   const navigate = useNavigate();
+  const { t, setLanguage, language } = useLanguage();
   const { values, errors, isTouched, isValid, handleChange } = useSubmissionForm();
+  const { updateDraft } = useSubmissionDraft();
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChange(e);
+    if (e.target.name === 'language') {
+      setLanguage(e.target.value);
+    }
+  };
+
+  useEffect(() => {
+    if (language && !values.language) {
+      const dummyEvent = {
+        target: { name: 'language', value: language }
+      } as any;
+      handleChange(dummyEvent);
+    }
+  }, [language, values.language, handleChange]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isValid) {
-      // Navigate to step 2: Voice
+      updateDraft((prev) => ({
+        ...prev,
+        information: {
+          fullName: values.fullName,
+          mobileNumber: values.mobileNumber,
+          title: values.title,
+          description: values.description,
+          category: values.category,
+          language: values.language,
+        },
+      }));
       navigate('/submit/voice');
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between selection:bg-blue-600/30 selection:text-blue-200">
+    <div className="min-h-screen bg-[#FAF9F6] text-slate-900 flex flex-col justify-between selection:bg-slate-900/10 selection:text-slate-950 font-sans">
       {/* Header navbar */}
-      <header className="bg-slate-900/40 backdrop-blur-md border-b border-slate-900 w-full py-4 px-6 flex items-center justify-between sticky top-0 z-50">
-        <Link to="/" className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors">
-          <Landmark className="h-6 w-6" />
-          <span className="font-bold text-white tracking-tight">People's Priorities AI</span>
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/80 w-full py-4 px-6 flex items-center justify-between sticky top-0 z-50">
+        <Link to="/" className="flex items-center space-x-2.5 text-slate-900 hover:text-slate-700 transition-colors">
+          <Landmark className="h-5 w-5 text-slate-950" />
+          <span className="font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base">{t('brandName')}</span>
         </Link>
         <Link
           to="/"
-          className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="text-label-mono text-slate-500 hover:text-slate-950 transition-colors flex items-center gap-1"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Cancel
+          <ArrowLeft className="h-3.5 w-3.5" />
+          {t('btnCancel')}
         </Link>
       </header>
 
       {/* Main Form container */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 shadow-2xl relative overflow-hidden">
-          {/* Top blue/indigo gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-600" />
+      <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-12 sm:px-6">
+        <div className="card-premium p-6 sm:p-10 space-y-8 relative overflow-hidden">
+          {/* Top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0B0B0C]" />
 
           {/* Heading and Back Button */}
           <div className="space-y-4">
             <Link
               to="/"
-              className="inline-flex items-center text-sm font-semibold text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center text-[10px] font-black text-slate-400 hover:text-slate-800 transition-colors uppercase tracking-wider"
             >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
+              <ArrowLeft className="h-4 w-4 mr-1 text-slate-450" />
+              {t('btnBack')}
             </Link>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              Report Development Issue
+            <h1 className="text-editorial-header text-xl sm:text-2xl text-slate-950 leading-tight">
+              Tell us what happened in your community.
             </h1>
+            <p className="text-xs text-slate-500 font-medium">
+              We translate and normalize your grievance using deterministic, explainable AI templates.
+            </p>
           </div>
 
-          {/* Progress Bar (Step 1 of 4 - Information) */}
+          {/* Progress Bar (Step 1 of 5) */}
           <ProgressBar currentStep={1} />
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Full Name */}
-              <FormField
-                label="Full Name"
-                name="fullName"
-                value={values.fullName}
-                onChange={handleChange}
-                placeholder="Enter your name (optional)"
-              />
-
-              {/* Mobile Number */}
-              <FormField
-                label="Mobile Number"
-                name="mobileNumber"
-                type="tel"
-                value={values.mobileNumber}
-                onChange={handleChange}
-                placeholder="Enter 10-digit number (optional)"
-                inputMode="tel"
-                error={isTouched.mobileNumber ? errors.mobileNumber : undefined}
-              />
-            </div>
-
-            {/* Issue Title */}
-            <FormField
-              label="Issue Title"
-              name="title"
-              value={values.title}
-              onChange={handleChange}
-              placeholder="Brief title of the issue (e.g. Potholes on Main Street)"
-              required
-              error={isTouched.title ? errors.title : undefined}
-            />
-
-            {/* Issue Description */}
+          {/* Guided Conversational Narrative Form */}
+          <form onSubmit={handleSubmit} className="space-y-6 pt-2">
+            
+            {/* The primary narrative workspace description first */}
             <TextArea
-              label="Issue Description"
+              label="Describe the issue in detail"
               name="description"
               value={values.description}
               onChange={handleChange}
-              placeholder="Provide a detailed description of the problem. What infrastructure is broken? How is it affecting the community?"
+              placeholder={t('placeholderDescription')}
               required
               maxLength={1000}
               error={isTouched.description ? errors.description : undefined}
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Category select */}
+            {/* Title Summary */}
+            <FormField
+              label={t('labelIssueTitle')}
+              name="title"
+              value={values.title}
+              onChange={handleChange}
+              placeholder={t('placeholderIssueTitle')}
+              required
+              error={isTouched.title ? errors.title : undefined}
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+              {/* Category selector */}
               <CategorySelect
                 value={values.category}
                 onChange={handleChange}
@@ -117,27 +128,48 @@ export default function SubmissionFormPage() {
                 error={isTouched.category ? errors.category : undefined}
               />
 
-              {/* Language select */}
+              {/* Language selector */}
               <LanguageSelect
                 value={values.language}
-                onChange={handleChange}
+                onChange={handleSelectChange}
                 required
                 error={isTouched.language ? errors.language : undefined}
               />
             </div>
 
+            <div className="border-t border-slate-100 pt-6 space-y-2">
+              <span className="text-label-mono font-bold uppercase tracking-wider">Reporter Contact (Optional)</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <FormField
+                  label={t('labelFullName')}
+                  name="fullName"
+                  value={values.fullName}
+                  onChange={handleChange}
+                  placeholder={t('placeholderFullName')}
+                />
+                <FormField
+                  label={t('labelMobile')}
+                  name="mobileNumber"
+                  type="tel"
+                  value={values.mobileNumber}
+                  onChange={handleChange}
+                  placeholder={t('placeholderMobile')}
+                  inputMode="tel"
+                  error={isTouched.mobileNumber ? errors.mobileNumber : undefined}
+                />
+              </div>
+            </div>
+
             {/* Action buttons */}
-            <div className="pt-6 border-t border-slate-800 flex justify-end">
+            <div className="pt-6 border-t border-slate-100 flex justify-end">
               <button
                 type="submit"
                 disabled={!isValid}
-                className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white transition-all shadow-lg ${
-                  isValid
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 cursor-pointer shadow-blue-500/20 hover:shadow-blue-500/30"
-                    : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50"
+                className={`btn-primary-pill inline-flex items-center justify-center gap-2 px-8 py-4 ${
+                  isValid ? "cursor-pointer" : "opacity-40 cursor-not-allowed"
                 }`}
               >
-                Continue
+                {t('btnContinue')}
                 <Send className="h-4 w-4" />
               </button>
             </div>
@@ -146,8 +178,8 @@ export default function SubmissionFormPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 py-6 border-t border-slate-900 text-center text-slate-600 text-xs sm:text-sm">
-        © 2026 People's Priorities AI. All rights reserved.
+      <footer className="bg-white py-6 border-t border-slate-200 text-center text-slate-500 text-xs font-semibold uppercase tracking-wider">
+        {t('footerCopyright')}
       </footer>
     </div>
   );

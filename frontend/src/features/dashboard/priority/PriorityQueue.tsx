@@ -60,13 +60,13 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
   const getPriorityBadgeClass = (level: string) => {
     switch (level.toUpperCase()) {
       case 'CRITICAL':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+        return 'bg-rose-50 text-rose-700 border-rose-100';
       case 'HIGH':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+        return 'bg-amber-50 text-amber-700 border-amber-100';
       case 'MEDIUM':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        return 'bg-blue-50 text-blue-700 border-blue-100';
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return 'bg-slate-50 text-slate-700 border-slate-100';
     }
   };
 
@@ -86,11 +86,11 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
   };
 
   const SortIndicator: React.FC<{ field: SortField }> = ({ field }) => {
-    if (sortBy !== field) return <span className="text-slate-600 ml-1">⇅</span>;
+    if (sortBy !== field) return <span className="text-slate-350 ml-1">⇅</span>;
     return sortOrder === 'asc' ? (
-      <span className="text-blue-400 ml-1">▲</span>
+      <span className="text-slate-900 ml-1">▲</span>
     ) : (
-      <span className="text-blue-400 ml-1">▼</span>
+      <span className="text-slate-900 ml-1">▼</span>
     );
   };
 
@@ -104,10 +104,10 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search priority queue..."
-            className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-800 bg-slate-900/40 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 transition-all font-sans"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 bg-[#FAF9F6] text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-950 transition-all font-sans"
           />
           <svg
-            className="w-4 h-4 text-slate-500 absolute left-3 top-3"
+            className="w-4 h-4 text-slate-400 absolute left-3 top-2.5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -120,47 +120,47 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
             />
           </svg>
         </div>
-        <div className="text-xs text-slate-500 font-sans">
+        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-sans">
           Showing {processedItems.length} of {items?.length || 0} issues
         </div>
       </div>
 
       {/* Table Container */}
-      <div className="flex-1 overflow-x-auto rounded-xl border border-slate-900 bg-slate-950/20">
-        <table className="w-full text-left border-collapse font-sans">
+      <div className="flex-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+        <table className="w-full text-left border-collapse font-sans text-xs">
           <thead>
-            <tr className="border-b border-slate-900 text-xs font-semibold text-slate-400 bg-slate-950/40">
+            <tr className="border-b border-slate-200 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50">
               <th
                 onClick={() => handleSort('priority')}
-                className="py-3.5 px-4 cursor-pointer hover:text-slate-200 select-none transition-all"
+                className="py-3.5 px-4 cursor-pointer hover:text-slate-800 select-none transition-all"
               >
                 Priority <SortIndicator field="priority" />
               </th>
-              <th className="py-3.5 px-4">Issue Details</th>
+              <th className="py-3.5 px-4 text-slate-500">Issue Details</th>
               <th
                 onClick={() => handleSort('category')}
-                className="py-3.5 px-4 cursor-pointer hover:text-slate-200 select-none transition-all"
+                className="py-3.5 px-4 cursor-pointer hover:text-slate-800 select-none transition-all"
               >
                 Category <SortIndicator field="category" />
               </th>
               <th
                 onClick={() => handleSort('locality')}
-                className="py-3.5 px-4 cursor-pointer hover:text-slate-200 select-none transition-all"
+                className="py-3.5 px-4 cursor-pointer hover:text-slate-800 select-none transition-all"
               >
                 Locality <SortIndicator field="locality" />
               </th>
               <th
                 onClick={() => handleSort('date')}
-                className="py-3.5 px-4 cursor-pointer hover:text-slate-200 select-none transition-all"
+                className="py-3.5 px-4 cursor-pointer hover:text-slate-800 select-none transition-all"
               >
                 Reported <SortIndicator field="date" />
               </th>
             </tr>
           </thead>
-          <tbody className="text-sm divide-y divide-slate-900/60">
+          <tbody className="text-xs divide-y divide-slate-100 text-slate-700">
             {processedItems.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-10 text-slate-500 text-xs">
+                <td colSpan={5} className="text-center py-10 text-slate-450 italic">
                   No issues matching criteria.
                 </td>
               </tr>
@@ -169,15 +169,15 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
                 <tr
                   key={item.submissionId}
                   onClick={() => onSelectRow(item.submissionId)}
-                  className="hover:bg-slate-900/20 cursor-pointer transition-all duration-150 group"
+                  className="hover:bg-slate-50/50 cursor-pointer transition-all duration-150 group"
                 >
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-sm font-bold tracking-tight text-slate-200 font-mono w-7">
+                      <span className="text-xs font-black tracking-tight text-slate-900 font-mono w-7">
                         {item.priorityScore}
                       </span>
                       <span
-                        className={`text-[10px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider font-sans ${getPriorityBadgeClass(
+                        className={`text-[9px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider font-sans ${getPriorityBadgeClass(
                           item.priorityLevel
                         )}`}
                       >
@@ -187,21 +187,21 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
                   </td>
                   <td className="py-3.5 px-4 max-w-xs md:max-w-sm lg:max-w-md">
                     <div className="flex flex-col">
-                      <span className="font-semibold text-slate-200 group-hover:text-blue-400 transition-colors line-clamp-1">
+                      <span className="font-extrabold text-slate-900 group-hover:text-slate-850 transition-colors line-clamp-1">
                         {item.title}
                       </span>
-                      <span className="text-xs text-slate-500 line-clamp-1 mt-0.5 font-sans">
+                      <span className="text-[10px] text-slate-400 line-clamp-1 mt-0.5 font-sans font-medium">
                         Rec: {item.recommendedAction}
                       </span>
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-xs font-semibold text-slate-400">
+                  <td className="py-3.5 px-4 font-bold text-slate-500 uppercase tracking-wider text-[9px]">
                     {item.category}
                   </td>
-                  <td className="py-3.5 px-4 text-xs text-slate-400">
+                  <td className="py-3.5 px-4 font-medium text-slate-650">
                     {item.locality}
                   </td>
-                  <td className="py-3.5 px-4 text-xs text-slate-500">
+                  <td className="py-3.5 px-4 font-medium text-slate-400">
                     {formatDate(item.processedAt)}
                   </td>
                 </tr>

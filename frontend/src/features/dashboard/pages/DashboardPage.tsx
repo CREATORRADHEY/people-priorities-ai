@@ -1,6 +1,5 @@
 import React from 'react';
-
-
+import { Link } from 'react-router-dom';
 import { useDashboardData } from '../hooks/useDashboardData';
 import { DashboardWidget } from '../components/DashboardWidget';
 import { DashboardErrorBoundary } from '../components/DashboardErrorBoundary';
@@ -11,6 +10,7 @@ import DuplicateClusters from '../duplicates/DuplicateClusters';
 import RecommendationCenter from '../recommendations/RecommendationCenter';
 import HumanReviewQueue from '../review/HumanReviewQueue';
 import SubmissionExplorer from '../explorer/SubmissionExplorer';
+import { Landmark, ArrowLeft } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -30,31 +30,36 @@ export const DashboardPage: React.FC = () => {
     explorer.clear();
   };
 
-
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 flex flex-col font-sans">
       {/* Top Navbar */}
-      <nav className="border-b border-slate-900 bg-slate-950/80 sticky top-0 z-40 backdrop-blur-md">
+      <nav className="border-b border-slate-200 bg-white/80 sticky top-0 z-40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-[0_0_12px_rgba(59,130,246,0.3)]">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-black tracking-widest text-slate-100 uppercase">
-                Aequitas AI
-              </span>
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                Decision Portal
-              </span>
-            </div>
+            <Link to="/" className="flex items-center gap-2 text-slate-900 hover:text-slate-700 transition-colors">
+              <Landmark className="h-5 w-5 text-slate-950" />
+              <div className="flex flex-col">
+                <span className="text-xs font-black tracking-widest text-slate-950 uppercase">
+                  Aequitas AI
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                  Decision Portal
+                </span>
+              </div>
+            </Link>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-slate-400 font-bold bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800/80">
-              🇮🇳 District Member of Parliament Desk
+          
+          <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">
+            {/* Added Back Button for Planners/MPs to return to the public landing page */}
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-250 hover:border-slate-400 text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 transition-colors cursor-pointer shadow-sm"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to Public Portal
+            </Link>
+            <span className="text-[10px] text-slate-500 font-bold bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
+              🇮🇳 MP Desk
             </span>
           </div>
         </div>
@@ -64,12 +69,12 @@ export const DashboardPage: React.FC = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         
         {/* Header Title */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900/60 pb-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-black text-slate-100 uppercase tracking-wide">
+            <h1 className="text-xl font-black text-slate-950 uppercase tracking-wider">
               District Decision Intelligence Dashboard
             </h1>
-            <p className="text-xs text-slate-400 mt-1 leading-normal max-w-2xl">
+            <p className="text-xs text-slate-500 mt-1 leading-normal max-w-2xl font-medium">
               Provides deterministic, explainable intelligence synthesized from citizen mobile reports. Filter, rank, and allocate department work orders in real-time.
             </p>
           </div>
@@ -83,10 +88,10 @@ export const DashboardPage: React.FC = () => {
                 reviewQueue.refetch(),
               ]);
             }}
-            className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold rounded-xl border border-slate-800 text-slate-300 hover:text-slate-100 hover:bg-slate-900 cursor-pointer transition-all self-start md:self-center"
+            className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 shadow-sm cursor-pointer transition-all self-start md:self-center"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
             </svg>
             Refresh Dashboard
           </button>

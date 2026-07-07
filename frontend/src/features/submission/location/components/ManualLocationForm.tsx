@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormField from '../../components/FormField';
+import { useLanguage } from '../../../landing/context/LanguageContext';
 
 interface ManualLocationFormProps {
   onSave: (locality: string, ward: string, landmark: string) => void;
@@ -12,6 +13,7 @@ export default function ManualLocationForm({
   onCancel,
   initialValues
 }: ManualLocationFormProps) {
+  const { t } = useLanguage();
   const [locality, setLocality] = useState(initialValues?.locality || '');
   const [ward, setWard] = useState(initialValues?.ward || '');
   const [landmark, setLandmark] = useState(initialValues?.landmark || '');
@@ -20,7 +22,7 @@ export default function ManualLocationForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!locality.trim()) {
-      setError("Locality is required.");
+      setError("Area/Locality is required.");
       return;
     }
     setError(null);
@@ -28,12 +30,14 @@ export default function ManualLocationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto p-6 bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl w-full text-left">
-      <h3 className="text-lg font-bold text-white mb-2">Enter Location Details</h3>
+    <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto p-6 bg-[#FAF9F6] border border-slate-200 rounded-3xl shadow-sm w-full text-left font-sans">
+      <h3 className="text-xs font-extrabold text-slate-950 uppercase tracking-wider mb-2">
+        Enter Location Details
+      </h3>
       
       {/* Area / Locality */}
       <FormField
-        label="Area / Locality"
+        label={t('locationLabelLocality') + " *"}
         name="locality"
         value={locality}
         onChange={(e) => {
@@ -47,7 +51,7 @@ export default function ManualLocationForm({
 
       {/* Ward */}
       <FormField
-        label="Ward (Optional)"
+        label={t('locationLabelWard')}
         name="ward"
         value={ward}
         onChange={(e) => setWard(e.target.value)}
@@ -56,25 +60,25 @@ export default function ManualLocationForm({
 
       {/* Landmark */}
       <FormField
-        label="Landmark (Optional)"
+        label={t('locationLabelLandmark')}
         name="landmark"
         value={landmark}
         onChange={(e) => setLandmark(e.target.value)}
-        placeholder="e.g. Near Metro Station"
+        placeholder={t('locationPlaceholderLandmark')}
       />
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex items-center gap-3 pt-2 text-xs font-bold uppercase tracking-wider">
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 py-3 rounded-xl font-semibold border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white bg-slate-900/30 hover:bg-slate-900/60 transition-colors"
+          className="flex-1 py-3 rounded-full border border-slate-250 hover:border-slate-400 text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 transition-colors cursor-pointer shadow-sm"
         >
-          Cancel
+          {t('btnCancel')}
         </button>
         <button
           type="submit"
-          className="flex-1 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-md shadow-blue-900/30"
+          className="flex-1 py-3 rounded-full text-white bg-slate-950 hover:bg-slate-900 transition-colors shadow-md shadow-slate-950/10 cursor-pointer"
         >
           Save Location
         </button>

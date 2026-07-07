@@ -23,33 +23,33 @@ export default function ImageCard({
   };
 
   return (
-    <div className="relative group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-slate-700 transition-all">
+    <div className="relative bg-white border border-slate-200 rounded-2xl overflow-hidden p-2.5 shadow-sm hover:border-slate-950 transition-all group font-sans">
       {/* Thumbnail */}
-      <div className="aspect-square w-full overflow-hidden bg-slate-950 flex items-center justify-center relative">
+      <div className="aspect-square w-full overflow-hidden bg-slate-50 flex items-center justify-center relative rounded-xl border border-slate-100">
         <img
           src={previewUrl}
           alt={fileName}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-102"
         />
-        {/* Overlay with Delete button on hover */}
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Overlay with Delete button */}
+        <div className="absolute inset-0 bg-white/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             type="button"
             onClick={onRemove}
             aria-label="Remove image"
-            className="p-3 rounded-full bg-red-600 hover:bg-red-500 text-white transition-colors transform scale-90 group-hover:scale-100 duration-300"
+            className="p-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white transition-all transform scale-90 group-hover:scale-100 cursor-pointer shadow-md shadow-rose-900/10"
           >
-            <Trash2 className="h-5 w-5" />
+            <Trash2 className="h-4.5 w-4.5" />
           </button>
         </div>
       </div>
 
       {/* Info footer */}
-      <div className="p-3 bg-slate-900 border-t border-slate-800/80 flex flex-col space-y-0.5">
-        <span className="text-xs font-semibold text-slate-200 truncate" title={fileName}>
+      <div className="pt-3 px-1 flex flex-col space-y-0.5">
+        <span className="text-[11px] font-black text-slate-800 truncate" title={fileName}>
           {fileName}
         </span>
-        <span className="text-[10px] text-slate-500 font-medium">
+        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider font-mono">
           {formatSize(fileSize)}
         </span>
       </div>
