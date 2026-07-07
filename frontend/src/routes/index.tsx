@@ -1,9 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LandingPage } from '../features/landing';
-import { SubmissionFormPage, ComingSoonPlaceholder } from '../features/submission';
+import { SubmissionFormPage } from '../features/submission';
 import { VoiceRecordingPage } from '../features/submission/voice';
 import { ImageUploadPage } from '../features/submission/images';
 import { LocationPage } from '../features/submission/location';
+import { ReviewPage, SuccessPlaceholderPage } from '../features/submission/review';
 
 export const router = createBrowserRouter([
   {
@@ -28,12 +29,10 @@ export const router = createBrowserRouter([
   },
   {
     path: '/submit/review',
-    element: (
-      <ComingSoonPlaceholder
-        stepNumber={5}
-        stepTitle="Review"
-        featurePack="FP-1.7"
-      />
-    ),
+    element: <ReviewPage />,
+  },
+  {
+    path: '/submit/success',
+    element: <SuccessPlaceholderPage />,
   },
 ]);
