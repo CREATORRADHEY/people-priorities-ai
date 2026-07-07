@@ -18,9 +18,9 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
   return (
     <div className="w-full space-y-4 font-sans">
       {/* Steps Header */}
-      <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400">
+      <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider text-slate-500">
         <span>{t('stepIndicator', { current: currentStep, total: steps.length })}</span>
-        <span className="text-slate-900 font-black">{steps[currentStep - 1].label}</span>
+        <span className="text-slate-950 font-black">{steps[currentStep - 1].label}</span>
       </div>
 
       {/* Progress Bar Track */}
@@ -32,7 +32,7 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
       </div>
 
       {/* Step Indicators */}
-      <div className="grid grid-cols-5 gap-2 text-center text-[9px] uppercase font-bold tracking-wider">
+      <div className="grid grid-cols-5 gap-2 text-center text-xs uppercase font-extrabold tracking-wider">
         {steps.map((step) => {
           const isActive = step.number === currentStep;
           const isCompleted = step.number < currentStep;
@@ -44,11 +44,11 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
                 isActive 
                   ? "text-slate-950 font-black" 
                   : isCompleted 
-                    ? "text-slate-500" 
-                    : "text-slate-300"
+                    ? "text-slate-650" 
+                    : "text-slate-350"
               }`}
             >
-              <div className="hidden sm:block truncate">{step.label}</div>
+              <div className="hidden sm:block leading-tight">{step.label}</div>
               <div className="sm:hidden">{step.number}</div>
             </div>
           );

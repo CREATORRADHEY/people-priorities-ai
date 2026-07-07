@@ -43,7 +43,7 @@ export default function ImageUploader() {
 
       {/* Constraints List Footer */}
       <div className="w-full pt-4 border-t border-slate-200 flex flex-col space-y-2 text-left text-[11px] text-slate-500 font-medium">
-        <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[9px] text-slate-400">
+        <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs text-slate-400">
           <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
           <span>Constraints:</span>
         </div>

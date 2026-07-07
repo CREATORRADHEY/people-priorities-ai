@@ -27,7 +27,7 @@ export default function LocationSummary({ location }: LocationSummaryProps) {
           <MapPin className="h-4 w-4 text-slate-800" />
           <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider">4. {t('locationSectionTitle')}</h3>
         </div>
-        <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider">
           {isValid ? (
             <span className="inline-flex items-center gap-1 text-emerald-700 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -47,7 +47,7 @@ export default function LocationSummary({ location }: LocationSummaryProps) {
         <div className="space-y-3.5 text-xs text-slate-700 font-medium">
           {/* Prioritize human readable fields */}
           <div>
-            <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelLocality')}</span>
+            <span className="text-slate-400 text-xs font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelLocality')}</span>
             <p className="text-slate-950 font-extrabold leading-snug">
               {location.locality || (location.source === 'gps' ? "Coordinates Logged" : "Unknown")}
             </p>
@@ -57,13 +57,13 @@ export default function LocationSummary({ location }: LocationSummaryProps) {
             <div className="grid grid-cols-2 gap-4">
               {location.ward && (
                 <div>
-                  <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelWard')}</span>
+                  <span className="text-slate-400 text-xs font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelWard')}</span>
                   <p className="text-slate-900 font-extrabold">{location.ward}</p>
                 </div>
               )}
               {location.landmark && (
                 <div>
-                  <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelLandmark')}</span>
+                  <span className="text-slate-400 text-xs font-bold uppercase tracking-wider block mb-0.5">{t('locationLabelLandmark')}</span>
                   <p className="text-slate-900 font-extrabold">{location.landmark}</p>
                 </div>
               )}
@@ -73,7 +73,7 @@ export default function LocationSummary({ location }: LocationSummaryProps) {
           {/* Secondary coordinates details */}
           {location.source === 'gps' && location.latitude !== undefined && location.longitude !== undefined && (
             <div className="bg-[#FAF9F6] border border-slate-200 rounded-2xl p-3.5 space-y-2 font-mono text-[11px] text-slate-500">
-              <span className="text-slate-450 font-sans font-bold uppercase text-[9px] tracking-wider block mb-1">{t('locationLabelCoordinates')}</span>
+              <span className="text-slate-450 font-sans font-bold uppercase text-xs tracking-wider block mb-1">{t('locationLabelCoordinates')}</span>
               <div className="flex justify-between">
                 <span>Latitude:</span>
                 <span className="text-slate-800 font-semibold">{location.latitude.toFixed(6)}°</span>
@@ -96,7 +96,7 @@ export default function LocationSummary({ location }: LocationSummaryProps) {
       )}
 
       {/* Edit Link Action */}
-      <div className="flex justify-end pt-2 text-[10px] font-bold uppercase tracking-wider">
+      <div className="flex justify-end pt-2 text-xs font-bold uppercase tracking-wider">
         <Link
           to="/submit/location"
           className="inline-flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 transition-colors"

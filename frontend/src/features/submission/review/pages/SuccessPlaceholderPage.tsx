@@ -45,14 +45,14 @@ export default function SuccessPlaceholderPage() {
           {/* Reference IDs layout card */}
           <div className="bg-[#FAF9F6] border border-slate-200 p-6 rounded-2xl text-left space-y-4 shadow-inner">
             <div className="flex justify-between items-center py-2 border-b border-slate-200/60">
-              <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">{t('successStatusLabel')}</span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+              <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">{t('successStatusLabel')}</span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
                 RECEIVED
               </span>
             </div>
             
             <div className="flex flex-col gap-1 py-1">
-              <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">Submission ID</span>
+              <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">Submission ID</span>
               <span className="font-mono text-xs sm:text-sm text-slate-800 font-bold break-all select-all">
                 {submissionId}
               </span>
@@ -60,7 +60,7 @@ export default function SuccessPlaceholderPage() {
 
             {requestId && (
               <div className="flex flex-col gap-1 py-1 border-t border-slate-200/60">
-                <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">{t('successRefLabel')}</span>
+                <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">{t('successRefLabel')}</span>
                 <span className="font-mono text-xs text-slate-500 break-all select-all">
                   {requestId}
                 </span>

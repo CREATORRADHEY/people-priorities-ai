@@ -77,7 +77,7 @@ export default function SubmissionFormPage() {
           <div className="space-y-4">
             <Link
               to="/"
-              className="inline-flex items-center text-[10px] font-black text-slate-400 hover:text-slate-800 transition-colors uppercase tracking-wider"
+              className="inline-flex items-center text-xs font-black text-slate-400 hover:text-slate-800 transition-colors uppercase tracking-wider"
             >
               <ArrowLeft className="h-4 w-4 mr-1 text-slate-450" />
               {t('btnBack')}

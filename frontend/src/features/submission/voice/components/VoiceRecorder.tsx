@@ -90,7 +90,7 @@ export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProp
         <p className="text-slate-800 text-xs font-black uppercase tracking-wider">
           {recordingState === 'recording' ? t('voiceProcessing') : t('voiceSubtitle')}
         </p>
-        <p className="text-[10px] text-slate-400 flex items-center justify-center gap-1 font-bold uppercase tracking-wider">
+        <p className="text-xs text-slate-400 flex items-center justify-center gap-1 font-bold uppercase tracking-wider">
           <Info className="h-3.5 w-3.5 text-slate-400" />
           {t('voiceDurationLimit')}
         </p>
@@ -131,7 +131,7 @@ export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProp
           >
             <Mic className="h-8 w-8" />
           </button>
-          <p className="text-[10px] text-slate-455 font-bold uppercase tracking-wider mt-4">
+          <p className="text-xs text-slate-455 font-bold uppercase tracking-wider mt-4">
             {t('voiceRecordHelp')}
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProp
           >
             <div className="h-6 w-6 bg-white rounded-md" />
           </button>
-          <p className="text-[10px] text-rose-600 font-bold uppercase tracking-wider mt-4 animate-pulse">
+          <p className="text-xs text-rose-600 font-bold uppercase tracking-wider mt-4 animate-pulse">
             {t('voiceStopRecord')}
           </p>
         </div>
@@ -162,7 +162,7 @@ export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProp
             />
           </div>
 
-          <div className="flex justify-center items-center gap-4 text-[10px] font-bold uppercase tracking-wider">
+          <div className="flex justify-center items-center gap-4 text-xs font-bold uppercase tracking-wider">
             <button
               type="button"
               onClick={handleReRecord}

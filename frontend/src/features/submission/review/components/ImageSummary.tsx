@@ -41,7 +41,7 @@ export default function ImageSummary({ images = [] }: ImageSummaryProps) {
           <Camera className="h-4 w-4 text-slate-800" />
           <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider">3. {t('imageSectionTitle')}</h3>
         </div>
-        <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider">
           {hasImages ? (
             <span className="inline-flex items-center gap-1 text-emerald-700 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -79,7 +79,7 @@ export default function ImageSummary({ images = [] }: ImageSummaryProps) {
       )}
 
       {/* Edit Link Action */}
-      <div className="flex justify-end pt-2 text-[10px] font-bold uppercase tracking-wider">
+      <div className="flex justify-end pt-2 text-xs font-bold uppercase tracking-wider">
         <Link
           to="/submit/images"
           className="inline-flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 transition-colors"

@@ -16,7 +16,7 @@ export default function LocationCard({ location, onClear }: LocationCardProps) {
     <div className="flex flex-col space-y-5 max-w-md mx-auto p-6 bg-white border border-slate-200 rounded-3xl shadow-sm w-full text-left relative overflow-hidden font-sans">
       
       {/* Decorative tag */}
-      <div className="absolute top-0 right-0 p-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-[#FAF9F6] border-l border-b border-slate-200 rounded-bl-xl">
+      <div className="absolute top-0 right-0 p-3 flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-slate-505 bg-[#FAF9F6] border-l border-b border-slate-200 rounded-bl-xl">
         {isGps ? (
           <>
             <ShieldCheck className="h-3.5 w-3.5 text-slate-700 animate-pulse" />
@@ -37,7 +37,7 @@ export default function LocationCard({ location, onClear }: LocationCardProps) {
         
         {/* Human Readable Location Priority */}
         <div className="flex-1 space-y-1 pr-16 min-w-0">
-          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Captured Location</h4>
+          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Captured Location</h4>
           <p className="text-base font-extrabold text-slate-900 leading-snug truncate">
             {location.locality || (isGps ? "Coordinates Logged" : "Unknown Locality")}
           </p>
@@ -53,7 +53,7 @@ export default function LocationCard({ location, onClear }: LocationCardProps) {
       {/* Secondary Coordinates Display (Prioritized below human-readable strings) */}
       {isGps && location.latitude !== undefined && location.longitude !== undefined && (
         <div className="space-y-1.5 pt-2">
-          <span className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">{t('locationLabelCoordinates')}</span>
+          <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">{t('locationLabelCoordinates')}</span>
           <CoordinateDisplay
             latitude={location.latitude}
             longitude={location.longitude}

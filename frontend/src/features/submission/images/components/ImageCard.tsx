@@ -46,10 +46,10 @@ export default function ImageCard({
 
       {/* Info footer */}
       <div className="pt-3 px-1 flex flex-col space-y-0.5">
-        <span className="text-[11px] font-black text-slate-800 truncate" title={fileName}>
+        <span className="text-xs font-black text-slate-800 truncate" title={fileName}>
           {fileName}
         </span>
-        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider font-mono">
+        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider font-mono">
           {formatSize(fileSize)}
         </span>
       </div>
