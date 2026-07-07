@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "description": "Initial production prompt set for People's Priorities AI Analysis Pipeline.",
+  "prompts": {
+    "stage1_normalize": {
+      "file": "stage1_normalize.md",
+      "purpose": "Language detection and plain-text normalization of a citizen submission.",
+      "version": "1.0"
+    },
+    "stage2_reason": {
+      "file": "stage2_reason.md",
+      "purpose": "Classification, theme extraction, confidence scoring and recommendation generation.",
+      "version": "1.0"
+    }
+  },
+  "active_since": "2026-07-07"
+}

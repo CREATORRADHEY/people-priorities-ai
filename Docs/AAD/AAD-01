@@ -1,0 +1,496 @@
+📄 AAD-01
+AI Architecture Document
+
+Version: 1.0
+Status: Ready
+Owner: AI Team
+Depends On: BAD-01
+
+1. Vision
+
+Our goal is not to build a chatbot.
+
+Our goal is to build an AI Decision Intelligence Platform that transforms thousands of citizen submissions into actionable recommendations for Members of Parliament (MPs).
+
+Input:
+
+Citizen Data
+
+Output:
+
+Decision Intelligence
+2. AI Mission
+
+The AI must answer five questions:
+
+1. What is the citizen saying?
+
+↓
+
+2. What problem does it represent?
+
+↓
+
+3. How many citizens report the same issue?
+
+↓
+
+4. How urgent is the issue?
+
+↓
+
+5. What should the MP prioritize?
+
+Everything in Sprint 3 exists to answer these questions.
+
+3. AI System Architecture
+                 Citizen Submission
+                         │
+                         ▼
+               AI Orchestration Engine
+                         │
+     ┌───────────┬────────────┬─────────────┐
+     ▼           ▼            ▼             ▼
+ Language     Voice        Vision      Structured
+ Detection  Processing    Analysis        Data
+     │           │            │             │
+     └───────────┴────────────┴─────────────┘
+                     │
+                     ▼
+            Information Fusion Engine
+                     │
+                     ▼
+          Classification & Theme Engine
+                     │
+                     ▼
+            Similarity & Clustering
+                     │
+                     ▼
+            Priority Scoring Engine
+                     │
+                     ▼
+          Recommendation Generator
+                     │
+                     ▼
+                Dashboard API
+4. AI Folder Structure
+backend/app/ai/
+
+├── gateway/
+│
+├── prompts/
+│
+├── pipeline/
+│
+├── language/
+│
+├── transcription/
+│
+├── vision/
+│
+├── fusion/
+│
+├── classification/
+│
+├── clustering/
+│
+├── scoring/
+│
+├── recommendation/
+│
+├── models/
+│
+└── tests/
+
+Each folder owns one capability.
+
+5. AI Gateway
+
+The Gateway is the only component allowed to call Gemini.
+
+Pipeline
+
+↓
+
+Gateway
+
+↓
+
+Gemini
+
+Never call Gemini directly from:
+
+classification
+recommendation
+clustering
+scoring
+Responsibilities
+Prompt routing
+Model configuration
+Temperature
+Token limits
+Retry
+Error handling
+Cost tracking
+Latency tracking
+Structured JSON parsing
+6. AI Pipeline
+
+Every submission passes through the same pipeline.
+
+Submission
+
+↓
+
+Language Detection
+
+↓
+
+Voice Transcription
+
+↓
+
+Image Understanding
+
+↓
+
+Information Fusion
+
+↓
+
+Issue Classification
+
+↓
+
+Theme Extraction
+
+↓
+
+Duplicate Detection
+
+↓
+
+Priority Scoring
+
+↓
+
+Recommendation
+
+↓
+
+Analysis Stored
+7. Pipeline States
+RECEIVED
+
+↓
+
+LANGUAGE_DETECTION
+
+↓
+
+TRANSCRIPTION
+
+↓
+
+IMAGE_ANALYSIS
+
+↓
+
+FUSION
+
+↓
+
+CLASSIFICATION
+
+↓
+
+CLUSTERING
+
+↓
+
+PRIORITY_SCORING
+
+↓
+
+RECOMMENDATION
+
+↓
+
+COMPLETED
+
+↓
+
+FAILED
+
+This makes monitoring and retries much easier.
+
+8. Information Fusion Engine
+
+This is one of the most important parts of the system.
+
+Inputs come from different modalities:
+
+Voice
+
+Image
+
+Text
+
+Location
+
+Metadata
+
+The Fusion Engine creates a single canonical representation:
+
+{
+  "issue": "...",
+  "location": "...",
+  "category": "...",
+  "citizenIntent": "...",
+  "evidence": [...]
+}
+
+Every downstream AI module consumes this unified object rather than raw inputs.
+
+9. Prompt Library
+
+Never hardcode prompts.
+
+backend/app/ai/prompts/
+
+language.md
+
+transcription.md
+
+summary.md
+
+classification.md
+
+priority.md
+
+recommendation.md
+
+vision.md
+
+fusion.md
+
+Each prompt should have:
+
+Version
+Purpose
+Input schema
+Output schema
+Example
+10. Structured Output Contract
+
+Every AI module must return structured JSON.
+
+Example:
+
+{
+  "summary": "Streetlights are not functioning near MG Road.",
+
+  "category": "Electricity",
+
+  "themes": [
+    "Street Lighting",
+    "Road Safety"
+  ],
+
+  "confidence": 0.93
+}
+
+Avoid free-form text whenever possible.
+
+11. AI Analysis Model
+
+Persist results separately from raw submissions.
+
+analysis/
+
+    analysisId
+
+        submissionId
+
+        language
+
+        translatedText
+
+        summary
+
+        category
+
+        themes
+
+        sentiment
+
+        duplicateCluster
+
+        hotspot
+
+        priorityScore
+
+        confidence
+
+        recommendations
+
+        processedAt
+
+This keeps source data immutable.
+
+12. Priority Scoring
+
+The AI should never output only "High" or "Low".
+
+Use a score:
+
+0-100
+
+Built from multiple factors.
+
+Example framework:
+
+Priority Score
+
+=
+
+Issue Severity      (30%)
+
+Citizen Frequency   (25%)
+
+Infrastructure Risk (20%)
+
+Location Importance (15%)
+
+Confidence          (10%)
+
+Even if the first version uses heuristic values, the interface remains stable.
+
+13. Recommendation Engine
+
+Instead of merely classifying issues, generate actionable recommendations.
+
+Example:
+
+{
+  "recommendation": {
+    "action": "Repair street lighting on MG Road",
+    "reason": "High citizen frequency and safety impact",
+    "priority": "Immediate"
+  }
+}
+14. AI Observability
+
+For every AI call, record:
+
+Request ID
+
+Submission ID
+
+Model
+
+Prompt Version
+
+Latency
+
+Input Tokens
+
+Output Tokens
+
+Estimated Cost
+
+Confidence
+
+Success / Failure
+
+This becomes invaluable when debugging or optimizing prompts.
+
+15. AI Testing
+
+Each module should have benchmark cases.
+
+For every prompt, measure:
+
+Accuracy
+
+Latency
+
+Cost
+
+Consistency
+
+Failure Rate
+
+Store representative test submissions for regression testing.
+
+16. AI Versioning
+
+Version prompts independently from code.
+
+Prompt Version
+
+↓
+
+v1.0
+
+v1.1
+
+v2.0
+
+This allows experimentation without changing application logic.
+
+17. Future AI Extensions
+
+The architecture should support:
+
+Embeddings
+Vector search
+Duplicate clustering with semantic similarity
+Hotspot detection
+Trend analysis
+Time-series forecasting
+Multi-model evaluation
+Human review workflows
+
+None of these require architectural changes if we keep the Gateway and Pipeline abstractions.
+
+18. Sprint Mapping
+Sprint 3
+
+FP-3.1 AI Gateway + Pipeline
+
+↓
+
+FP-3.2 Classification & Priority Engine
+
+↓
+
+FP-3.3 MP Dashboard
+
+↓
+
+Sprint 4 (Future)
+
+Embeddings
+
+Hybrid Search
+
+RAG
+
+Agentic Planning
+
+Predictive Analytics
+19. Definition of Done
+
+AAD-01 is complete when:
+
+ AI architecture defined
+ AI Gateway established
+ Pipeline defined
+ Module ownership established
+ Prompt strategy documented
+ Structured output contract defined
+ Analysis data model designed
+ Priority scoring framework defined
+ Recommendation architecture defined
+ AI observability planned
