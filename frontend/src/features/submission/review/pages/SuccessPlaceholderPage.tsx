@@ -1,7 +1,15 @@
-import { Link } from 'react-router-dom';
+import { useLocation, Link, Navigate } from 'react-router-dom';
 import { ShieldCheck, ArrowRight, Landmark } from 'lucide-react';
 
 export default function SuccessPlaceholderPage() {
+  const location = useLocation();
+  const { submissionId, requestId } = (location.state as { submissionId?: string; requestId?: string }) || {};
+
+  // Redirect to home if direct URL access without a valid submission state occurs
+  if (!submissionId) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between selection:bg-blue-600/30 selection:text-blue-200">
       {/* Header navbar */}
@@ -25,26 +33,44 @@ export default function SuccessPlaceholderPage() {
 
           <div className="space-y-3">
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              Submission Ready!
+              Submission Received
             </h1>
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              This prototype has successfully validated and prepared your issue submission payload.
+              Your community priority report has been securely uploaded and stored.
             </p>
           </div>
 
-          {/* Prototype Explanation Callout */}
-          <div className="bg-slate-950/55 border border-slate-850 p-4 sm:p-5 rounded-2xl text-left space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-400">Next Phase Notice</span>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
-              Because this is a frontend prototype, no active network requests or database writes were executed. The complete structured payload with your images, location metadata, and voice duration details is compiled in memory and ready for backend submission in SPRINT 2.
-            </p>
+          {/* Reference IDs layout card */}
+          <div className="bg-slate-950/60 border border-slate-850 p-6 rounded-2xl text-left space-y-4 shadow-inner">
+            <div className="flex justify-between items-center py-2 border-b border-slate-900">
+              <span className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Status</span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                RECEIVED
+              </span>
+            </div>
+            
+            <div className="flex flex-col gap-1 py-1">
+              <span className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Submission ID</span>
+              <span className="font-mono text-sm sm:text-base text-blue-400 font-bold break-all select-all">
+                {submissionId}
+              </span>
+            </div>
+
+            {requestId && (
+              <div className="flex flex-col gap-1 py-1 border-t border-slate-900/40">
+                <span className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Request ID</span>
+                <span className="font-mono text-xs sm:text-sm text-slate-400 break-all select-all">
+                  {requestId}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Home Link Button */}
           <div className="pt-4">
             <Link
               to="/"
-              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all cursor-pointer"
             >
               Return Home
               <ArrowRight className="h-4 w-4" />

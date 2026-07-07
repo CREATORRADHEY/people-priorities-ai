@@ -9,10 +9,15 @@ import LocationSummary from '../components/LocationSummary';
 import ValidationPanel from '../components/ValidationPanel';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import { useSubmissionReview } from '../hooks/useSubmissionReview';
+import { useSubmissionWorkflow } from '../../hooks/useSubmissionWorkflow';
+import { useSubmissionDraft } from '../../hooks/useSubmissionDraft';
+import { PROGRESS_MESSAGES } from '../../services/progressMessages';
 
 export default function ReviewPage() {
   const navigate = useNavigate();
-  const { draft, payload, errors, isValid } = useSubmissionReview();
+  const { draft, errors, isValid } = useSubmissionReview();
+  const { updateDraft } = useSubmissionDraft();
+  const { loading, state: workflowState, error: workflowError, submitDraft, resetWorkflow } = useSubmissionWorkflow();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSubmitClick = () => {
@@ -21,14 +26,22 @@ export default function ReviewPage() {
     }
   };
 
-  const handleConfirmSubmit = () => {
+  const handleConfirmSubmit = async () => {
     setIsDialogOpen(false);
     
-    // Log the generated payload for future integration debugging
-    console.log("Submission Payload Built Successfully:", payload);
-
-    // Route to confirmation screen (mock)
-    navigate('/submit/success');
+    const result = await submitDraft(draft);
+    if (result.success) {
+      // Clean up the draft metadata and files after success
+      updateDraft(() => ({ images: [] }));
+      
+      // Navigate to the Success screen passing the ID results
+      navigate('/submit/success', {
+        state: {
+          submissionId: result.submissionId,
+          requestId: result.requestId
+        }
+      });
+    }
   };
 
   return (
@@ -87,9 +100,9 @@ export default function ReviewPage() {
             <button
               type="button"
               onClick={handleSubmitClick}
-              disabled={!isValid}
+              disabled={!isValid || loading}
               className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white transition-all shadow-lg ${
-                isValid
+                isValid && !loading
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-105 cursor-pointer shadow-blue-500/20 hover:shadow-blue-500/30"
                   : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50"
               }`}
@@ -100,6 +113,58 @@ export default function ReviewPage() {
           </div>
         </div>
       </main>
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center z-[100]">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-sm w-full mx-4 text-center space-y-6 shadow-2xl relative">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-3xl" />
+            <div className="flex justify-center">
+              <div className="h-16 w-16 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white tracking-tight">Submitting Issue</h3>
+              <p className="text-blue-400 text-sm font-semibold animate-pulse">
+                {PROGRESS_MESSAGES[workflowState]}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Overlay */}
+      {workflowError && !loading && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center z-[100]">
+          <div className="bg-slate-900 border border-red-500/20 rounded-3xl p-8 max-w-md w-full mx-4 text-center space-y-6 shadow-2xl relative">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-red-500 rounded-t-3xl" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-500">
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white tracking-tight">Submission Failed</h3>
+              <p className="text-slate-400 text-sm">{workflowError}</p>
+            </div>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => submitDraft(draft)}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+              >
+                Retry Submission
+              </button>
+              <button
+                type="button"
+                onClick={resetWorkflow}
+                className="flex-1 px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-bold text-slate-300 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Confirmation Dialog Overlay Modal */}
       <ConfirmationDialog
