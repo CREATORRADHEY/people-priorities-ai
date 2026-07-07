@@ -98,6 +98,8 @@ def test_valid_submission_post():
     assert "requestId" in data
     assert data["requestId"].startswith("SUB-")
     assert data["status"] == "accepted"
+    assert "data" in data
+    assert data["data"] == {"submissionId": None}
 
 
 def test_invalid_submission_post_missing_fields():

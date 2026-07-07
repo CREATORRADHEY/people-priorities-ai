@@ -21,5 +21,8 @@ class SubmissionService:
             "success": True,
             "requestId": request_id,
             "status": "accepted",
-            "message": "Submission accepted."
+            "message": "Submission accepted.",
+            "data": {
+                "submissionId": None
+            }
         }

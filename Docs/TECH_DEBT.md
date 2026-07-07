@@ -42,3 +42,12 @@ This document tracks identified technical debt, bundle optimizations, and code q
   - Specifically isolate split chunks for key workflow pages: Landing, Submission, Voice, Images, and Review.
 - **Status**: Backlog
 - **Priority**: Medium
+
+### TECH-DEBT-005: Distributed Request ID Generation
+
+- **Description**: The current in-memory request ID counter resets when the API process restarts and is not suitable for multi-process or distributed backend node deployments.
+- **Impact**: Potential collision of Request IDs in scaled-out production environments.
+- **Proposed Actions**: Replace the in-memory counter with a distributed ID generation library, UUIDv7, or rely directly on Firestore document auto-generation schemes.
+- **Status**: Backlog
+- **Priority**: Medium
+
