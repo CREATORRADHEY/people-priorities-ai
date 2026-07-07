@@ -67,4 +67,29 @@ This document tracks identified technical debt, bundle optimizations, and code q
 - **Status**: Backlog
 - **Priority**: Low
 
+### TECH-DEBT-008: Secure Signed Media URLs
+
+- **Description**: Media download URLs are currently generated using public unauthenticated paths.
+- **Impact**: Anyone with the link can access the evidence files, exposing private citizen information.
+- **Proposed Actions**: Transition Firebase Storage access to short-lived signed URLs generated on-the-fly.
+- **Status**: Backlog
+- **Priority**: Medium
+
+### TECH-DEBT-009: Upload Resilience & Retry Strategy
+
+- **Description**: There is no built-in resilience pattern during network-dependent file uploads to Firebase Storage.
+- **Impact**: Client uploads fail abruptly on transient network dropped packages.
+- **Proposed Actions**: Introduce a robust retry strategy with exponential backoff on storage client network operations.
+- **Status**: Backlog
+- **Priority**: Low
+
+### TECH-DEBT-010: Centralized Media Validation Engine
+
+- **Description**: Validation checks for images and voice files (sizes, mime-types, extensions) are handled inline within the upload service.
+- **Impact**: Hard to maintain, scale, or share rules if new endpoints or background workers process files.
+- **Proposed Actions**: Move media constraints to a central validation engine or utility helper module.
+- **Status**: Backlog
+- **Priority**: Low
+
+
 
