@@ -115,6 +115,42 @@ This document tracks identified technical debt, bundle optimizations, and code q
 - **Status**: Backlog
 - **Priority**: Medium
 
+### TECH-DEBT-014: Prompt Evaluation Dataset
 
+- **Description**: Prompts are currently validated manually. No fixed benchmark dataset exists for regression testing.
+- **Impact**: Prompt changes cannot be measured for accuracy, latency, or consistency regressions before deployment.
+- **Proposed Actions**: Build a curated dataset of representative citizen submissions with expected analysis outputs and integrate it into CI via a prompt benchmark runner.
+- **Status**: Backlog
+- **Priority**: High
 
+### TECH-DEBT-015: Prompt Response Caching
 
+- **Description**: Identical or near-identical submission descriptions invoke the full Gemini pipeline on every analysis trigger.
+- **Impact**: Unnecessary API cost and latency for duplicate civic complaints (common in high-volume areas).
+- **Proposed Actions**: Introduce a lightweight hash-based cache keyed on normalized submission text to short-circuit AI calls for exact duplicates.
+- **Status**: Backlog
+- **Priority**: Medium
+
+### TECH-DEBT-016: Circuit Breaker for Gemini Gateway
+
+- **Description**: Repeated Gemini failures (timeouts, quota errors) are retried inline with no failure rate tracking.
+- **Impact**: A sustained outage causes every analysis request to hang until timeout, degrading the entire API.
+- **Proposed Actions**: Implement a circuit breaker pattern in GeminiGateway that opens after N consecutive failures and returns a fast-fail response until the service recovers.
+- **Status**: Backlog
+- **Priority**: High
+
+### TECH-DEBT-017: Async Background Pipeline Execution
+
+- **Description**: AI analysis runs synchronously inside the HTTP request cycle for `POST /api/v1/analysis/submissions/{id}`.
+- **Impact**: Long-running Gemini calls (2–8s each, two stages) block the request thread and risk HTTP gateway timeouts.
+- **Proposed Actions**: Move pipeline execution to a background task queue (e.g. Celery + Redis, or Cloud Tasks). The endpoint returns 202 Accepted immediately with a polling or webhook mechanism for completion.
+- **Status**: Backlog
+- **Priority**: High
+
+### TECH-DEBT-018: Analysis Schema Version Migrations
+
+- **Description**: The `AnalysisResult` schema is written to Firestore without a migration strategy for future field changes.
+- **Impact**: Adding or renaming fields in future sprints will leave old documents incompatible with new code.
+- **Proposed Actions**: Add a `schemaVersion` field to every analysis document and implement a migration utility that back-fills old documents when the schema evolves.
+- **Status**: Backlog
+- **Priority**: Medium
