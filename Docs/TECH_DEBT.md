@@ -91,5 +91,30 @@ This document tracks identified technical debt, bundle optimizations, and code q
 - **Status**: Backlog
 - **Priority**: Low
 
+### TECH-DEBT-011: Background Upload Queue
+
+- **Description**: Submissions require active browser focus and network connection to finish uploading.
+- **Impact**: Citizens experience upload failures if the browser is closed or connectivity drops mid-upload.
+- **Proposed Actions**: Implement a Service Worker based background sync queue or localStorage-based submission retry queue to retry after browser reconnect.
+- **Status**: Backlog
+- **Priority**: Medium
+
+### TECH-DEBT-012: Cancelable Upload Actions
+
+- **Description**: Long-running media uploads cannot be canceled once started.
+- **Impact**: Frustrated users on slow connections are forced to refresh the browser to abort.
+- **Proposed Actions**: Add AbortController support to apiClient and expose a cancellation method in the useSubmissionWorkflow hook.
+- **Status**: Backlog
+- **Priority**: Low
+
+### TECH-DEBT-013: Chunked Image Uploads
+
+- **Description**: Large image uploads are transmitted in single HTTP requests.
+- **Impact**: High failure rate in rural or congested environments with poor mobile signals.
+- **Proposed Actions**: Refactor upload media logic to support chunked file uploads with partial upload state recovery.
+- **Status**: Backlog
+- **Priority**: Medium
+
+
 
 
