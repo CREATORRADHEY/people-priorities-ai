@@ -12,6 +12,8 @@ from app.core.config import settings
 from app.core.logging import logger
 from app.api.routes import submissions
 from app.api.routes import analysis as analysis_routes
+from app.api.routes import intelligence as intelligence_routes
+
 from app.utils.request_id import generate_request_id
 
 app = FastAPI(
@@ -161,3 +163,5 @@ async def health_check():
 # Include Routers
 app.include_router(submissions.router, prefix="/api/v1")
 app.include_router(analysis_routes.router, prefix="/api/v1")
+app.include_router(intelligence_routes.router, prefix="/api/v1")
+

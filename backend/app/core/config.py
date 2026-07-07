@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     # Gemini settings
     GEMINI_API_KEY: str | None = None
     GEMINI_MODEL: str = "gemini-2.5-flash"
+
+    # Intelligence Engine settings
+    HOTSPOT_LOOKBACK_DAYS: int = 90   # Look-back window for hotspot detection
+    HOTSPOT_THRESHOLD: int = 5        # Min issues in locality+category to flag hotspot
+
     
     model_config = SettingsConfigDict(
         env_file=".env",
