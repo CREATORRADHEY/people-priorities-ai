@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from app.schemas.submission_request import SubmissionRequest
 from app.schemas.submission_response import SubmissionSuccessResponse
 from app.services.submission_service import SubmissionService
+from app.repositories.base_submission_repository import BaseSubmissionRepository
+from app.api.dependencies.repositories import get_submission_repository
 from app.utils.request_id import generate_request_id
 from app.core.logging import logger
 
@@ -18,7 +20,7 @@ router = APIRouter()
 async def create_submission(
     request: SubmissionRequest,
     raw_request: Request,
-    service: SubmissionService = Depends(SubmissionService)
+    repo: BaseSubmissionRepository = Depends(get_submission_repository)
 ):
     request_id = getattr(raw_request.state, "request_id", generate_request_id())
     start_time = time.time()
@@ -31,7 +33,9 @@ async def create_submission(
     )
     
     try:
-        result = service.create_submission(request, request_id)
+        # Inject repository into service layer
+        service = SubmissionService(repo)
+        result = await service.create_submission(request, request_id)
         
         duration = time.time() - start_time
         # Structured Response Logging

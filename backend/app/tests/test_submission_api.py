@@ -4,6 +4,36 @@ from app.main import app
 from app.utils.request_id import generate_request_id
 from app.services.submission_service import SubmissionService
 from app.schemas.submission_request import SubmissionRequest
+from app.repositories.base_submission_repository import BaseSubmissionRepository, NotFoundException
+from app.api.dependencies.repositories import get_submission_repository
+
+# 1. Create a fully functional mock repository for isolated controller/service testing
+class MockSubmissionRepository(BaseSubmissionRepository):
+    def __init__(self):
+        self.submissions = {}
+        self.counter = 0
+
+    async def create_submission(self, payload: dict) -> str:
+        self.counter += 1
+        sub_id = f"mock-sub-{self.counter}"
+        self.submissions[sub_id] = payload
+        return sub_id
+
+    async def get_submission(self, submission_id: str) -> dict | None:
+        return self.submissions.get(submission_id)
+
+    async def update_status(self, submission_id: str, status: str) -> bool:
+        if submission_id not in self.submissions:
+            raise NotFoundException("Not found")
+        self.submissions[submission_id]["status"] = status
+        return True
+
+    async def exists(self, submission_id: str) -> bool:
+        return submission_id in self.submissions
+
+# Register FastAPI dependency override
+mock_repo = MockSubmissionRepository()
+app.dependency_overrides[get_submission_repository] = lambda: mock_repo
 
 client = TestClient(app)
 
@@ -31,11 +61,13 @@ def test_request_id_generator():
     assert req_id_1 != req_id_2
 
 
-def test_submission_service_logic():
+@pytest.mark.anyio
+async def test_submission_service_logic():
     """
-    Test direct SubmissionService creation return payload.
+    Test direct SubmissionService creation using MockSubmissionRepository.
     """
-    service = SubmissionService()
+    repo = MockSubmissionRepository()
+    service = SubmissionService(repo)
     req_data = {
         "version": "1.0.0",
         "createdAt": "2026-07-07T09:00:00Z",
@@ -46,13 +78,20 @@ def test_submission_service_logic():
             "language": "en"
         }
     }
-    # Validate request structure first
     req_model = SubmissionRequest(**req_data)
-    result = service.create_submission(req_model, "SUB-20260707-123456")
+    result = await service.create_submission(req_model, "SUB-20260707-123456")
     
     assert result["success"] is True
     assert result["requestId"] == "SUB-20260707-123456"
-    assert result["status"] == "accepted"
+    assert result["status"] == "received"
+    assert result["data"]["submissionId"] == "mock-sub-1"
+    
+    # Assert payload was persisted with correct schema mappings
+    persisted = await repo.get_submission("mock-sub-1")
+    assert persisted is not None
+    assert persisted["schemaVersion"] == "1.0.0"
+    assert persisted["status"] == "RECEIVED"
+    assert "serverCreatedAt" in persisted
 
 
 def test_valid_submission_post():
@@ -97,9 +136,10 @@ def test_valid_submission_post():
     assert data["success"] is True
     assert "requestId" in data
     assert data["requestId"].startswith("SUB-")
-    assert data["status"] == "accepted"
+    assert data["status"] == "received"
     assert "data" in data
-    assert data["data"] == {"submissionId": None}
+    assert "submissionId" in data["data"]
+    assert data["data"]["submissionId"].startswith("mock-sub-")
 
 
 def test_invalid_submission_post_missing_fields():
@@ -112,7 +152,6 @@ def test_invalid_submission_post_missing_fields():
         "information": {
             "description": "Broken pipe leaking water.",
             "language": "en"
-            # Missing 'title' and 'category'
         }
     }
     
