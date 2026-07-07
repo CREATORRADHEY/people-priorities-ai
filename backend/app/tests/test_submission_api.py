@@ -31,9 +31,13 @@ class MockSubmissionRepository(BaseSubmissionRepository):
     async def exists(self, submission_id: str) -> bool:
         return submission_id in self.submissions
 
-# Register FastAPI dependency override
 mock_repo = MockSubmissionRepository()
-app.dependency_overrides[get_submission_repository] = lambda: mock_repo
+
+@pytest.fixture(autouse=True)
+def setup_dependency_overrides():
+    app.dependency_overrides[get_submission_repository] = lambda: mock_repo
+    yield
+    app.dependency_overrides.clear()
 
 client = TestClient(app)
 
