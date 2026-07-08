@@ -1,7 +1,17 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
+let baseUrl = import.meta.env.VITE_API_URL || '';
+if (baseUrl) {
+  // If the user specified a custom URL but forgot the /api/v1 suffix, append it
+  if (!baseUrl.endsWith('/api/v1') && !baseUrl.endsWith('/api/v1/')) {
+    baseUrl = baseUrl.replace(/\/$/, '') + '/api/v1';
+  }
+} else {
+  baseUrl = '/api/v1';
+}
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api/v1',
+  baseURL: baseUrl,
   timeout: 30000, // 30 seconds
   headers: {
     'Content-Type': 'application/json'
