@@ -40,7 +40,7 @@ Supports high-fidelity voice processing, recordings, and translation confirmatio
 ### 4. Decision Intelligence Dashboard
 A comprehensive command center for planners showing priority queues, regional hotspots, and action directives.
 
-![MP Decision Dashboard](Docs/screenshots/submission_wizard_ready.png)
+![MP Decision Dashboard](Docs/screenshots/dashboard_mp.png)
 
 ---
 
