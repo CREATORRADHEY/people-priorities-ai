@@ -1,5 +1,5 @@
 import time
-from fastapi import APIRouter, Depends, HTTPException, status, Request, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, status, Request, File, UploadFile, BackgroundTasks
 from app.schemas.submission_request import SubmissionRequest
 from app.schemas.submission_response import SubmissionSuccessResponse
 from app.schemas.upload_response import UploadSuccessResponse
@@ -12,8 +12,37 @@ from app.api.dependencies.storage import get_storage_service
 from app.storage.base_storage_service import BaseStorageService
 from app.utils.request_id import generate_request_id
 from app.core.logging import logger
+from app.ai.pipeline.analysis_pipeline import AnalysisPipeline
+from app.ai.repositories.analysis_repository import FirestoreAnalysisRepository
 
 router = APIRouter()
+
+
+async def _run_analysis_background(submission_id: str, submission_data: dict, request_id: str):
+    """
+    Background task: runs the Gemini AI analysis pipeline on a newly submitted grievance.
+    Called automatically after every successful submission so the MP dashboard
+    Priority Queue and hotspot detection populate without any manual trigger.
+    """
+    try:
+        logger.info(f"[{request_id}] [BGAnalysis] Starting AI pipeline for submission: {submission_id}")
+        repo = FirestoreAnalysisRepository()
+        pipeline = AnalysisPipeline(repository=repo)
+        result = await pipeline.run(
+            submission_id=submission_id,
+            submission_data=submission_data,
+            request_id=request_id,
+        )
+        if result.success:
+            logger.info(
+                f"[{request_id}] [BGAnalysis] AI pipeline COMPLETED | "
+                f"analysisId={result.analysis_id} | confidence={result.analysis.confidence:.2f}"
+            )
+        else:
+            logger.error(f"[{request_id}] [BGAnalysis] AI pipeline FAILED: {result.error_message}")
+    except Exception as e:
+        logger.error(f"[{request_id}] [BGAnalysis] Unexpected error in background analysis: {e}")
+
 
 @router.post(
     "/submissions",
@@ -25,6 +54,7 @@ router = APIRouter()
 async def create_submission(
     request: SubmissionRequest,
     raw_request: Request,
+    background_tasks: BackgroundTasks,
     repo: BaseSubmissionRepository = Depends(get_submission_repository)
 ):
     request_id = getattr(raw_request.state, "request_id", generate_request_id())
@@ -47,6 +77,21 @@ async def create_submission(
         logger.info(
             f"[{request_id}] [API Response] Status: 200 OK, Duration: {duration:.4f}s"
         )
+
+        # Auto-trigger AI analysis pipeline in the background
+        # so the MP dashboard updates without any manual call
+        submission_id = result["data"]["submissionId"]
+        submission_data = {
+            "information": request.information.model_dump(),
+            "voice": request.voice.model_dump() if request.voice else None,
+            "images": [img.model_dump() for img in request.images] if request.images else [],
+            "location": request.location.model_dump() if request.location else None,
+        }
+        background_tasks.add_task(
+            _run_analysis_background, submission_id, submission_data, request_id
+        )
+        logger.info(f"[{request_id}] [API] AI analysis queued as background task for: {submission_id}")
+
         return result
         
     except HTTPException as he:
@@ -66,6 +111,7 @@ async def create_submission(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Internal server error during submission processing: {str(e)}"
         )
+
 
 
 @router.post(
