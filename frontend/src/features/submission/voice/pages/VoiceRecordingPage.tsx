@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Landmark, ArrowRight } from 'lucide-react';
 import ProgressBar from '../../components/ProgressBar';
@@ -15,13 +15,13 @@ export default function VoiceRecordingPage() {
   // Pre-fill validity state if a valid recording was already captured
   const [isValidRecording, setIsValidRecording] = useState(!!draft.voice?.blob);
 
-  const handleRecordingComplete = (blob: Blob | null, isValid: boolean, duration: number) => {
+  const handleRecordingComplete = useCallback((blob: Blob | null, isValid: boolean, duration: number) => {
     setIsValidRecording(isValid);
     updateDraft((prev) => ({
       ...prev,
       voice: blob ? { blob, duration } : undefined,
     }));
-  };
+  }, [updateDraft]);
 
   const handleContinue = () => {
     if (isValidRecording) {
