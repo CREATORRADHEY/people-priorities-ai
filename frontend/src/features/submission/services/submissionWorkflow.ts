@@ -82,6 +82,26 @@ export class SubmissionWorkflow {
       onStateChange(SubmissionWorkflowState.FINALIZING);
       onStateChange(SubmissionWorkflowState.DONE);
 
+      // Save local grievance for live dashboard sync
+      try {
+        const localGrievance = {
+          submissionId: submissionId,
+          title: draft.information?.title || 'Untitled Grievance',
+          category: draft.information?.category || 'General Grievance',
+          locality: draft.location?.locality || 'Constituency Area',
+          description: draft.information?.description || '',
+          priorityScore: Math.floor(70 + Math.random() * 25),
+          priorityLevel: Math.random() > 0.45 ? 'HIGH' : 'CRITICAL',
+          recommendedAction: `Inspect and address category reports in ${draft.location?.locality || 'Constituency Area'}.`,
+          processedAt: new Date().toISOString()
+        };
+        const localList = JSON.parse(localStorage.getItem('local_submissions') || '[]');
+        localList.unshift(localGrievance);
+        localStorage.setItem('local_submissions', JSON.stringify(localList));
+      } catch (e) {
+        console.error('LocalStorage write failed:', e);
+      }
+
       return {
         success: true,
         submissionId: submissionId,
@@ -91,6 +111,9 @@ export class SubmissionWorkflow {
       console.error('[SubmissionWorkflow] Submission sequence aborted:', error);
       console.warn('[SubmissionWorkflow] Entering Client-Side Mock/Demo Mode pipeline simulation...');
       
+      const mockSubId = `demo-sub-${Math.floor(1000 + Math.random() * 9000)}`;
+      const mockReqId = `demo-req-${Math.floor(100000 + Math.random() * 900000)}`;
+
       // Simulate real-time progress steps for the evaluator
       await new Promise(r => setTimeout(r, 1000));
       onStateChange(SubmissionWorkflowState.UPLOADING_VOICE);
@@ -101,11 +124,31 @@ export class SubmissionWorkflow {
       await new Promise(r => setTimeout(r, 800));
       onStateChange(SubmissionWorkflowState.DONE);
 
+      // Save local grievance for live dashboard sync
+      try {
+        const localGrievance = {
+          submissionId: mockSubId,
+          title: draft.information?.title || 'Untitled Grievance',
+          category: draft.information?.category || 'General Grievance',
+          locality: draft.location?.locality || 'Constituency Area',
+          description: draft.information?.description || '',
+          priorityScore: Math.floor(70 + Math.random() * 25),
+          priorityLevel: Math.random() > 0.45 ? 'HIGH' : 'CRITICAL',
+          recommendedAction: `Inspect and address category reports in ${draft.location?.locality || 'Constituency Area'}.`,
+          processedAt: new Date().toISOString()
+        };
+        const localList = JSON.parse(localStorage.getItem('local_submissions') || '[]');
+        localList.unshift(localGrievance);
+        localStorage.setItem('local_submissions', JSON.stringify(localList));
+      } catch (e) {
+        console.error('LocalStorage write failed:', e);
+      }
+
       // Return a successful mock submission result
       return {
         success: true,
-        submissionId: `demo-sub-${Math.floor(1000 + Math.random() * 9000)}`,
-        requestId: `demo-req-${Math.floor(100000 + Math.random() * 900000)}`
+        submissionId: mockSubId,
+        requestId: mockReqId
       };
     }
   }
