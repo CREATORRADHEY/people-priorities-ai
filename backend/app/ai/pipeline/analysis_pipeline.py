@@ -277,7 +277,13 @@ class AnalysisPipeline:
         information = submission_data.get("information", {})
         location = submission_data.get("location", {})
 
-        submission_text = information.get("issueDescription", "")
+        # Support both field names: 'description' (frontend) and 'issueDescription' (legacy)
+        submission_text = (
+            information.get("description")
+            or information.get("issueDescription")
+            or information.get("title")
+            or ""
+        )
         location_str = (
             location.get("locality")
             or location.get("ward")

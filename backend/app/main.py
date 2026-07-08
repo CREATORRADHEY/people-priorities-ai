@@ -2,7 +2,8 @@ import time
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
@@ -79,11 +80,10 @@ gemini_error = None
 
 try:
     if settings.GEMINI_API_KEY:
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        # Verify model initialization (gemini-2.5-flash as per SDD_00/AI architecture)
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        # Verify the key works by creating a client (new google-genai SDK)
+        _gemini_client = genai.Client(api_key=settings.GEMINI_API_KEY)
         gemini_initialized = True
-        logger.info("Gemini SDK configured successfully.")
+        logger.info(f"Gemini SDK (google-genai) configured successfully with model: {settings.GEMINI_MODEL}")
     else:
         # Fallback for development if key is missing
         if settings.ENVIRONMENT == "development":

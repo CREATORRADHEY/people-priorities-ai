@@ -1,7 +1,7 @@
 """
 gemini_gateway.py
 
-Concrete Gemini implementation of BaseAIGateway.
+Concrete Gemini implementation of BaseAIGateway using the new google-genai SDK.
 
 Responsibilities (as per AAD-01 Section 5):
   - Load and configure the Gemini model from settings.GEMINI_MODEL
@@ -13,7 +13,8 @@ Responsibilities (as per AAD-01 Section 5):
 import json
 import time
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 from app.ai.exceptions import AIGatewayException, ParsingException
 from app.ai.gateway.base_gateway import BaseAIGateway
@@ -56,22 +57,15 @@ def _extract_json(text: str) -> dict:
 
 class GeminiGateway(BaseAIGateway):
     """
-    Gemini generative AI gateway.
+    Gemini generative AI gateway using the new google-genai SDK.
 
     Uses settings.GEMINI_MODEL — never hardcodes a model name.
     """
 
     def __init__(self) -> None:
-        model_name = settings.GEMINI_MODEL
-        self._model = genai.GenerativeModel(
-            model_name=model_name,
-            generation_config=genai.GenerationConfig(
-                temperature=_TEMPERATURE,
-                max_output_tokens=_MAX_OUTPUT_TOKENS,
-            ),
-        )
-        self._model_name = model_name
-        logger.info(f"[GeminiGateway] Initialized with model: {model_name}")
+        self._model_name = settings.GEMINI_MODEL
+        self._client = genai.Client(api_key=settings.GEMINI_API_KEY)
+        logger.info(f"[GeminiGateway] Initialized with model: {self._model_name} (google-genai SDK)")
 
     async def generate(
         self,
@@ -99,7 +93,15 @@ class GeminiGateway(BaseAIGateway):
                     f"[GeminiGateway] Sending prompt '{prompt_name}' "
                     f"(attempt {attempt + 1}/{_MAX_RETRIES + 1})"
                 )
-                response = self._model.generate_content(prompt)
+
+                response = self._client.models.generate_content(
+                    model=self._model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=_TEMPERATURE,
+                        max_output_tokens=_MAX_OUTPUT_TOKENS,
+                    ),
+                )
                 raw_text = response.text
 
                 latency_ms = (time.monotonic() - start) * 1000
@@ -169,17 +171,6 @@ class GeminiGateway(BaseAIGateway):
                 ) from exc
 
         # Exhausted retries
-        latency_ms = 0.0
-        metrics = AIMetrics(
-            model=self._model_name,
-            prompt_version=prompt_version,
-            latency_ms=latency_ms,
-            input_tokens=None,
-            output_tokens=None,
-            estimated_cost_usd=None,
-            success=False,
-            failure_reason=str(last_exc),
-        )
         raise ParsingException(
             f"Gemini response for '{prompt_name}' failed validation after "
             f"{_MAX_RETRIES + 1} attempts: {last_exc}"
