@@ -42,7 +42,7 @@ export const DashboardPage: React.FC = () => {
                 <span className="text-xs font-black tracking-widest text-slate-950 uppercase">
                   Aequitas AI
                 </span>
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
                   Decision Portal
                 </span>
               </div>
@@ -58,7 +58,7 @@ export const DashboardPage: React.FC = () => {
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to Public Portal
             </Link>
-            <span className="text-[10px] text-slate-500 font-bold bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
+            <span className="text-xs text-slate-500 font-bold bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
               🇮🇳 MP Desk
             </span>
           </div>

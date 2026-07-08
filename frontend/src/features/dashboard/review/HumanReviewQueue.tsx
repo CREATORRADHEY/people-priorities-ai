@@ -42,17 +42,17 @@ export const HumanReviewQueue: React.FC<HumanReviewQueueProps> = ({ items, onSel
               <span className="text-xs font-bold text-slate-800 group-hover:text-slate-950 transition-colors line-clamp-1">
                 {item.title}
               </span>
-              <span className="text-[8px] bg-rose-50 text-rose-700 border border-rose-100 px-2 py-0.5 rounded font-extrabold uppercase tracking-wider shrink-0">
+              <span className="text-xs bg-rose-50 text-rose-700 border border-rose-100 px-2 py-0.5 rounded font-extrabold uppercase tracking-wider shrink-0">
                 Review Required
               </span>
             </div>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-500 font-semibold">
+            <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
               <span>Category: {item.category}</span>
               <span>Ward: {item.locality}</span>
             </div>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-400 mt-0.5 font-medium">
+            <div className="flex items-center justify-between text-xs text-slate-400 mt-0.5 font-medium">
               <span className="flex items-center gap-1">
                 AI Confidence: 
                 <span className="text-rose-600 font-bold font-mono">

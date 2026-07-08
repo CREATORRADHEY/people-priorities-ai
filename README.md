@@ -12,24 +12,31 @@ People's Priorities AI is a production-grade, multilingual AI-powered decision i
 
 ## 📸 Platform Interface Gallery
 
-### 1. Citizen Submission Wizard
-Allows citizens to record voice grievances in regional Indian languages, upload image proof, capture locations, and preview parsed summaries before final Firestore submission.
+### 1. Interactive Node Map & Landing Page
+Features a dynamic, interactive grievance node network visualizer on a premium minimalist light ivory canvas.
 
-![Citizen Submission Form Init](Docs/screenshots/submission_wizard_init.png)
-
----
-
-### 2. Live Multilingual Input Capture
-Supports voice processing and translations with responsive user confirmation checkpoints.
-
-![Citizen Voice Grievance Capture](Docs/screenshots/submission_wizard_voice.png)
+![Aequitas Landing Page](Docs/screenshots/landing_page_top.png)
 
 ---
 
-### 3. Decision Dashboard & Priority Center
-A comprehensive control panel showing priorities with mathematical weight breakdown contribution indicators, regional hotspots, duplicate clusters, and department-level directives.
+### 2. Citizen Submission Wizard
+Allows citizens to file issues by inputting descriptions in regional languages, uploading evidence, and verifying location tag details.
 
-![Citizen Submission Ready to Submit](Docs/screenshots/submission_wizard_ready.png)
+![Citizen Submission Form](Docs/screenshots/submission_wizard_init.png)
+
+---
+
+### 3. Live Multilingual Input Capture
+Supports high-fidelity voice processing, recordings, and translation confirmations.
+
+![Voice Grievance Capture](Docs/screenshots/submission_wizard_voice.png)
+
+---
+
+### 4. Decision Intelligence Dashboard
+A comprehensive command center for planners showing priority queues, regional hotspots, and action directives.
+
+![MP Decision Dashboard](Docs/screenshots/submission_wizard_ready.png)
 
 ---
 

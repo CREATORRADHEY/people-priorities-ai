@@ -120,7 +120,7 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
             />
           </svg>
         </div>
-        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-sans">
+        <div className="text-xs text-slate-400 font-bold uppercase tracking-wider font-sans">
           Showing {processedItems.length} of {items?.length || 0} issues
         </div>
       </div>
@@ -129,7 +129,7 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
       <div className="flex-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
         <table className="w-full text-left border-collapse font-sans text-xs">
           <thead>
-            <tr className="border-b border-slate-200 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50">
+            <tr className="border-b border-slate-200 text-xs font-bold text-slate-400 uppercase tracking-wider bg-slate-50">
               <th
                 onClick={() => handleSort('priority')}
                 className="py-3.5 px-4 cursor-pointer hover:text-slate-800 select-none transition-all"
@@ -177,7 +177,7 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
                         {item.priorityScore}
                       </span>
                       <span
-                        className={`text-[9px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider font-sans ${getPriorityBadgeClass(
+                        className={`text-xs px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider font-sans ${getPriorityBadgeClass(
                           item.priorityLevel
                         )}`}
                       >
@@ -190,12 +190,12 @@ export const PriorityQueue: React.FC<PriorityQueueProps> = ({ items, onSelectRow
                       <span className="font-extrabold text-slate-900 group-hover:text-slate-850 transition-colors line-clamp-1">
                         {item.title}
                       </span>
-                      <span className="text-[10px] text-slate-400 line-clamp-1 mt-0.5 font-sans font-medium">
+                      <span className="text-xs text-slate-400 line-clamp-1 mt-0.5 font-sans font-medium">
                         Rec: {item.recommendedAction}
                       </span>
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 font-bold text-slate-500 uppercase tracking-wider text-[9px]">
+                  <td className="py-3.5 px-4 font-bold text-slate-500 uppercase tracking-wider text-xs">
                     {item.category}
                   </td>
                   <td className="py-3.5 px-4 font-medium text-slate-650">

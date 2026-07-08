@@ -53,9 +53,9 @@ export const RecommendationCenter: React.FC<RecommendationCenterProps> = ({ item
           return (
             <div key={dept} className="flex flex-col space-y-2.5">
               {/* Department Group Header */}
-              <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1 flex items-center justify-between">
+              <div className="text-xs font-extrabold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1 flex items-center justify-between">
                 <span>{dept}</span>
-                <span className="text-[9px] text-slate-400 font-bold lowercase tracking-wider">
+                <span className="text-xs text-slate-400 font-bold lowercase tracking-wider">
                   {recs.length} {recs.length === 1 ? 'action' : 'actions'}
                 </span>
               </div>
@@ -73,7 +73,7 @@ export const RecommendationCenter: React.FC<RecommendationCenterProps> = ({ item
                         {rec.primaryCategory}
                       </span>
                       <span
-                        className={`text-[8px] px-2 py-0.5 rounded border uppercase tracking-wider font-extrabold ${getUrgencyBadge(
+                        className={`text-xs px-2 py-0.5 rounded border uppercase tracking-wider font-extrabold ${getUrgencyBadge(
                           rec.urgency
                         )}`}
                       >
@@ -85,7 +85,7 @@ export const RecommendationCenter: React.FC<RecommendationCenterProps> = ({ item
                       {rec.recommendedAction}
                     </p>
 
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1 leading-normal italic font-medium">
+                    <div className="text-xs text-slate-400 flex items-center gap-1 leading-normal italic font-medium">
                       <span>Reason:</span>
                       <span className="line-clamp-1">{rec.reason}</span>
                     </div>

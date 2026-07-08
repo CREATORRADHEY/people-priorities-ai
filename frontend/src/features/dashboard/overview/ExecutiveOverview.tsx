@@ -79,7 +79,7 @@ export const ExecutiveOverview: React.FC<ExecutiveOverviewProps> = ({ summary, l
           className={`flex flex-col justify-between p-5 rounded-3xl border transition-all duration-300 shadow-sm ${card.color}`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+            <span className="text-xs font-black text-slate-500 uppercase tracking-widest font-sans">
               {card.title}
             </span>
             {card.icon}

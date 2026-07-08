@@ -95,13 +95,13 @@ export const DuplicateClusters: React.FC<DuplicateClustersProps> = ({ priorities
                     <span className="text-xs font-bold text-slate-800 line-clamp-1">
                       {cluster.parentTitle}
                     </span>
-                    <span className="text-[10px] text-slate-455 mt-0.5 font-semibold">
+                    <span className="text-xs text-slate-455 mt-0.5 font-semibold">
                       {cluster.category} • {cluster.locality}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] bg-rose-50 text-rose-700 border border-rose-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                  <span className="text-xs bg-rose-50 text-rose-700 border border-rose-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                     Cluster
                   </span>
                   <span className="text-slate-400 text-xs">{isExpanded ? '▲' : '▼'}</span>
@@ -111,7 +111,7 @@ export const DuplicateClusters: React.FC<DuplicateClustersProps> = ({ priorities
               {/* Duplicate reports details list */}
               {isExpanded && (
                 <div className="border-t border-slate-100 bg-slate-50/30 px-4 py-3 divide-y divide-slate-100">
-                  <div className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mb-2">
+                  <div className="text-xs text-slate-400 font-extrabold uppercase tracking-wider mb-2">
                     Duplicate Reports in Cluster
                   </div>
                   {cluster.duplicates.map((dup) => (
@@ -123,7 +123,7 @@ export const DuplicateClusters: React.FC<DuplicateClustersProps> = ({ priorities
                       <span className="line-clamp-1 max-w-[200px] font-medium text-slate-700 hover:underline">
                         {dup.title}
                       </span>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-xs text-slate-400">
                         {formatDate(dup.processedAt)}
                       </span>
                     </div>
