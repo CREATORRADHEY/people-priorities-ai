@@ -1,12 +1,10 @@
-# People's Priorities AI: Constituency Decision Intelligence Platform
+# Aequitas (People's Priorities AI): Constituency Decision Intelligence Platform
 
-[![Build Status](https://github.com/creators/people-priorities-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/creators/people-priorities-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Latest Tag](https://img.shields.io/badge/Release-fp--3.3--complete-emerald)](https://github.com/creators/people-priorities-ai/releases/tag/fp-3.3-complete)
+[![Release](https://img.shields.io/badge/Release-fp--3.3--complete-emerald)](https://github.com/CREATORRADHEY/people-priorities-ai)
 
-> **Live Demo Platform**: [http://localhost:5173](http://localhost:5173)  
-> **API Server Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)  
-> **Demo Video Walkthrough**: [Watch the Demo Video](https://youtube.com)  
+> **Live Website (Vercel)**: [https://people-priorities-ai.vercel.app/](https://people-priorities-ai.vercel.app/)  
+> **API Server Docs (Render)**: [https://people-priorities-ai.onrender.com/docs](https://people-priorities-ai.onrender.com/docs)  
 
 People's Priorities AI is a production-grade, multilingual AI-powered decision intelligence platform for constituency development planning. It acts as an explainable intelligence layer that transforms fragmented citizen grievances (voice recordings, text summaries, image evidence) into structured, prioritized, and actionable decision directives for Members of Parliament (MPs) and constituency planning offices.
 
@@ -59,6 +57,14 @@ We have organized the system design docs, REST contracts, and execution guides i
 2. **N+1 Database Query Protection**: Implements batch document joins, reducing database calls by $80\%+$ during peak load.
 3. **Decoupled Widget Lifecycles**: Wraps each dashboard widget in an individual React Error Boundary to prevent cascade failures if a single backend component fails.
 4. **Explainable AI Pipeline**: Tracks and persists every step of the pipeline transition in Firestore, exposing an audit lineage timeline to government planners.
+
+---
+
+## 🚀 Live Production Deployment
+
+- **Backend Architecture**: The Python FastAPI service is containerized via Docker and hosted on **Render's Free Tier** with secure environment variable secret mapping.
+- **Frontend Architecture**: The Vite React bundle is statically hosted on **Vercel's Edge CDN** for low-latency delivery.
+- **Data Tier**: Real-time structured metrics and decision state pipelines are securely persisted in **Google Cloud Firestore**.
 
 ---
 
