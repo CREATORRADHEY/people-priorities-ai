@@ -64,7 +64,7 @@ async def create_submission(
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error during submission processing."
+            detail=f"Internal server error during submission processing: {str(e)}"
         )
 
 
