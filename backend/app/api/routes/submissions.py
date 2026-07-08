@@ -20,28 +20,79 @@ router = APIRouter()
 
 async def _run_analysis_background(submission_id: str, submission_data: dict, request_id: str):
     """
-    Background task: runs the Gemini AI analysis pipeline on a newly submitted grievance.
+    Background task: runs the FULL 3-stage AI pipeline on a newly submitted grievance.
+
+    Stage 1+2: AnalysisPipeline (Gemini AI → category, themes, confidence, summary)
+    Stage 3:   IntelligencePipeline (priority scoring, hotspot detection, recommendations)
+
     Called automatically after every successful submission so the MP dashboard
     Priority Queue and hotspot detection populate without any manual trigger.
     """
+    import asyncio
+
+    # ── Stage 1+2: Gemini AI Analysis ─────────────────────────────────────────
     try:
-        logger.info(f"[{request_id}] [BGAnalysis] Starting AI pipeline for submission: {submission_id}")
-        repo = FirestoreAnalysisRepository()
-        pipeline = AnalysisPipeline(repository=repo)
-        result = await pipeline.run(
+        logger.info(f"[{request_id}] [BGPipeline] Starting Gemini analysis for: {submission_id}")
+        analysis_repo = FirestoreAnalysisRepository()
+        analysis_pipeline = AnalysisPipeline(repository=analysis_repo)
+        analysis_result = await analysis_pipeline.run(
             submission_id=submission_id,
             submission_data=submission_data,
             request_id=request_id,
         )
-        if result.success:
+        if not analysis_result.success:
+            logger.error(f"[{request_id}] [BGPipeline] Analysis FAILED: {analysis_result.error_message}")
+            return
+        logger.info(
+            f"[{request_id}] [BGPipeline] Analysis COMPLETED | "
+            f"analysisId={analysis_result.analysis_id} | confidence={analysis_result.analysis.confidence:.2f}"
+        )
+    except Exception as e:
+        logger.error(f"[{request_id}] [BGPipeline] Analysis stage exception: {e}", exc_info=True)
+        return
+
+    # Brief pause to ensure Firestore write is fully committed before reading back
+    await asyncio.sleep(1)
+
+    # ── Stage 3: Intelligence Engine ───────────────────────────────────────────
+    try:
+        logger.info(f"[{request_id}] [BGPipeline] Starting Intelligence pipeline for: {submission_id}")
+        from app.ai.repositories.analysis_repository import FirestoreAnalysisRepository as AnalysisRepo
+        from app.ai.intelligence.pipeline.intelligence_pipeline import IntelligencePipeline
+        from app.ai.intelligence.repositories.intelligence_repository import FirestoreIntelligenceRepository
+
+        # Fetch the completed analysis document from Firestore
+        analysis_fetch_repo = AnalysisRepo()
+        analysis_data = await analysis_fetch_repo.get_analysis_by_submission(submission_id)
+
+        if not analysis_data:
+            # Fallback: build analysis_data from the pipeline result directly
+            logger.warning(f"[{request_id}] [BGPipeline] Could not fetch analysis from Firestore, using in-memory result")
+            analysis_data = analysis_result.analysis.model_dump()
+            analysis_data["analysisId"] = analysis_result.analysis_id
+
+        intel_repo = FirestoreIntelligenceRepository()
+        intel_pipeline = IntelligencePipeline(repository=intel_repo)
+        intel_result = await intel_pipeline.run(
+            submission_id=submission_id,
+            analysis_data=analysis_data,
+            submission_data=submission_data,
+            request_id=request_id,
+        )
+
+        if intel_result.get("success"):
+            intel = intel_result["intelligence"]
             logger.info(
-                f"[{request_id}] [BGAnalysis] AI pipeline COMPLETED | "
-                f"analysisId={result.analysis_id} | confidence={result.analysis.confidence:.2f}"
+                f"[{request_id}] [BGPipeline] Intelligence COMPLETED | "
+                f"intelligenceId={intel_result['intelligence_id']} | "
+                f"priority={intel.priorityLevel} | score={intel.priorityScore}"
             )
         else:
-            logger.error(f"[{request_id}] [BGAnalysis] AI pipeline FAILED: {result.error_message}")
+            logger.error(f"[{request_id}] [BGPipeline] Intelligence FAILED: {intel_result.get('error')}")
+
     except Exception as e:
-        logger.error(f"[{request_id}] [BGAnalysis] Unexpected error in background analysis: {e}")
+        logger.error(f"[{request_id}] [BGPipeline] Intelligence stage exception: {e}", exc_info=True)
+
 
 
 @router.post(
