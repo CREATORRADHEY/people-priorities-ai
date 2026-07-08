@@ -28,6 +28,11 @@ htmlcov/
 frontend/.env
 backend/.env
 
+# Google Cloud Credentials (Never commit private keys)
+backend/*.json
+*.json
+
+
 # IDE / System
 .DS_Store
 .vscode/

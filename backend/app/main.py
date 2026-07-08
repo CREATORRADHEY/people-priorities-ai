@@ -39,8 +39,15 @@ firebase_error = None
 db = None
 
 try:
-    # If credentials path is provided and exists, use it.
-    if settings.GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(settings.GOOGLE_APPLICATION_CREDENTIALS):
+    # Initialize using stringified JSON credentials if provided (secure production environment config)
+    if settings.FIREBASE_SERVICE_ACCOUNT_JSON:
+        logger.info("Initializing Firebase Admin with credentials from FIREBASE_SERVICE_ACCOUNT_JSON env var")
+        import json
+        service_account_info = json.loads(settings.FIREBASE_SERVICE_ACCOUNT_JSON)
+        cred = credentials.Certificate(service_account_info)
+        firebase_admin.initialize_app(cred)
+    # Otherwise if credentials path is provided and exists, use it.
+    elif settings.GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(settings.GOOGLE_APPLICATION_CREDENTIALS):
         logger.info(f"Initializing Firebase Admin with credentials from {settings.GOOGLE_APPLICATION_CREDENTIALS}")
         cred = credentials.Certificate(settings.GOOGLE_APPLICATION_CREDENTIALS)
         firebase_admin.initialize_app(cred)

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     # Firebase settings
     FIREBASE_PROJECT_ID: str = "mock-firebase-project-id"
     GOOGLE_APPLICATION_CREDENTIALS: str | None = None
+    FIREBASE_SERVICE_ACCOUNT_JSON: str | None = None
     
     # Gemini settings
     GEMINI_API_KEY: str | None = None
