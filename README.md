@@ -6,6 +6,10 @@
 > **Live Website (Vercel)**: [https://people-priorities-ai.vercel.app/](https://people-priorities-ai.vercel.app/)  
 > **API Server Docs (Render)**: [https://people-priorities-ai.onrender.com/docs](https://people-priorities-ai.onrender.com/docs)  
 
+> [!IMPORTANT]
+> **Render Cold Start Warning**: Because the backend API server is hosted on Render's free tier, the server automatically spins down (goes to sleep) after 15 minutes of inactivity. When visiting the site for the first time, it might take **40 to 50 seconds** for the backend to wake up. An API Status badge on the landing page will indicate when it is fully woke and ready to process requests. Thank you for your patience during evaluation!
+
+
 People's Priorities AI is a production-grade, multilingual AI-powered decision intelligence platform for constituency development planning. It acts as an explainable intelligence layer that transforms fragmented citizen grievances (voice recordings, text summaries, image evidence) into structured, prioritized, and actionable decision directives for Members of Parliament (MPs) and constituency planning offices.
 
 ---

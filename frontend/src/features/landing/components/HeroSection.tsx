@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -17,6 +17,42 @@ interface Node {
 export default function HeroSection() {
   const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'healthy' | 'waking' | 'offline'>('checking');
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/health`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (response.ok) {
+          setBackendStatus('healthy');
+        } else {
+          setBackendStatus('waking');
+        }
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        setBackendStatus('waking');
+        
+        // Periodically retry until active
+        const retryInterval = setInterval(async () => {
+          try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/health`);
+            if (res.ok) {
+              setBackendStatus('healthy');
+              clearInterval(retryInterval);
+            }
+          } catch (e) {
+            // Keep retrying
+          }
+        }, 4000);
+      }
+    };
+    
+    checkHealth();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -168,11 +204,47 @@ export default function HeroSection() {
           
           {/* Left Text Column */}
           <div className="lg:col-span-7 text-left space-y-8">
-            {/* Animated Badge */}
-            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200 bg-white text-slate-650 text-[10px] font-extrabold uppercase tracking-widest shadow-sm select-none">
-              <Sparkles className="h-3.5 w-3.5 text-slate-800 animate-spin" />
-              {t('heroBadge')}
+            {/* Animated Badge & Status Indicator */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200 bg-white text-slate-650 text-[10px] font-extrabold uppercase tracking-widest shadow-sm select-none">
+                <Sparkles className="h-3.5 w-3.5 text-slate-800 animate-spin" />
+                {t('heroBadge')}
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] font-extrabold uppercase tracking-widest shadow-sm select-none">
+                <span className="text-slate-400">API Status:</span>
+                {backendStatus === 'checking' && (
+                  <span className="inline-flex items-center gap-1 text-slate-500">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-pulse"></span>
+                    Checking...
+                  </span>
+                )}
+                {backendStatus === 'healthy' && (
+                  <span className="inline-flex items-center gap-1 text-emerald-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Active & Ready
+                  </span>
+                )}
+                {backendStatus === 'waking' && (
+                  <span className="inline-flex items-center gap-1 text-amber-700 animate-pulse">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                    Waking Up (Wait 40s)
+                  </span>
+                )}
+                {backendStatus === 'offline' && (
+                  <span className="inline-flex items-center gap-1 text-rose-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                    Offline
+                  </span>
+                )}
+              </div>
             </div>
+
+            {backendStatus === 'waking' && (
+              <div className="p-3 bg-amber-50/50 border border-amber-200/60 rounded-2xl text-[11px] text-amber-800 max-w-lg leading-normal font-medium animate-fadeIn">
+                ⚠️ **Render Cold Start**: The backend is hosted on a free Render server which sleeps when inactive. It is waking up automatically (takes ~45 seconds). Please wait for "Active & Ready" before submitting.
+              </div>
+            )}
 
             {/* Cinematic Typography Headings */}
             <h1 className="text-display-big text-5xl sm:text-7xl md:text-[85px] leading-[0.88] text-slate-950 select-none">

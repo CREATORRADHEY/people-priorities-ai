@@ -5,13 +5,22 @@ import ProgressBar from '../../components/ProgressBar';
 import VoiceRecorder from '../components/VoiceRecorder';
 import { useLanguage } from '../../../landing/context/LanguageContext';
 
+import { useSubmissionDraft } from '../../hooks/useSubmissionDraft';
+
 export default function VoiceRecordingPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [isValidRecording, setIsValidRecording] = useState(false);
+  const { draft, updateDraft } = useSubmissionDraft();
+  
+  // Pre-fill validity state if a valid recording was already captured
+  const [isValidRecording, setIsValidRecording] = useState(!!draft.voice?.blob);
 
-  const handleRecordingComplete = (_blob: Blob | null, isValid: boolean) => {
+  const handleRecordingComplete = (blob: Blob | null, isValid: boolean, duration: number) => {
     setIsValidRecording(isValid);
+    updateDraft((prev) => ({
+      ...prev,
+      voice: blob ? { blob, duration } : undefined,
+    }));
   };
 
   const handleContinue = () => {

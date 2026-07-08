@@ -6,7 +6,7 @@ import PermissionDialog from './PermissionDialog';
 import { useLanguage } from '../../../landing/context/LanguageContext';
 
 interface VoiceRecorderProps {
-  onRecordingComplete: (blob: Blob | null, isValid: boolean) => void;
+  onRecordingComplete: (blob: Blob | null, isValid: boolean, duration: number) => void;
 }
 
 export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProps) {
@@ -50,11 +50,11 @@ export default function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProp
 
   useEffect(() => {
     if (recordingState === 'recorded' && audioBlob) {
-      onRecordingComplete(audioBlob, isDurationValid);
+      onRecordingComplete(audioBlob, isDurationValid, duration);
     } else {
-      onRecordingComplete(null, false);
+      onRecordingComplete(null, false, 0);
     }
-  }, [recordingState, audioBlob, isDurationValid, onRecordingComplete]);
+  }, [recordingState, audioBlob, isDurationValid, duration, onRecordingComplete]);
 
   if (!isSupported) {
     return (
