@@ -45,3 +45,7 @@ backend/*.json
 
 # Docker
 docker-compose.override.yml
+
+# Whitelist deployment files
+!vercel.json
+!frontend/vercel.json
