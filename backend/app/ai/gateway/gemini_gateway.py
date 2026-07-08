@@ -100,6 +100,7 @@ class GeminiGateway(BaseAIGateway):
                     config=types.GenerateContentConfig(
                         temperature=_TEMPERATURE,
                         max_output_tokens=_MAX_OUTPUT_TOKENS,
+                        response_mime_type="application/json",
                     ),
                 )
                 raw_text = response.text
@@ -153,6 +154,29 @@ class GeminiGateway(BaseAIGateway):
 
             except Exception as exc:
                 latency_ms = (time.monotonic() - start) * 1000
+                
+                # Check for 429 rate limit or quota errors to perform backoff retry
+                exc_str = str(exc).upper()
+                if "429" in exc_str or "RESOURCE_EXHAUSTED" in exc_str or "QUOTA" in exc_str:
+                    quota_attempt = getattr(self, "_quota_retries", 0)
+                    max_quota_retries = 3
+                    if quota_attempt < max_quota_retries:
+                        # Exponential backoff: 2s, 4s, 8s...
+                        backoff_sec = 2 ** (quota_attempt + 1)
+                        logger.warning(
+                            f"[GeminiGateway] Rate limit hit (429/RESOURCE_EXHAUSTED) for '{prompt_name}'. "
+                            f"Retrying in {backoff_sec} seconds... (Attempt {quota_attempt + 1}/{max_quota_retries})"
+                        )
+                        import asyncio
+                        await asyncio.sleep(backoff_sec)
+                        self._quota_retries = quota_attempt + 1
+                        # Reset main loop attempt to retry this generation step
+                        continue
+                
+                # Reset rate limit retry counter on other errors
+                if hasattr(self, "_quota_retries"):
+                    delattr(self, "_quota_retries")
+
                 metrics = AIMetrics(
                     model=self._model_name,
                     prompt_version=prompt_version,
@@ -169,6 +193,10 @@ class GeminiGateway(BaseAIGateway):
                 raise AIGatewayException(
                     f"Gemini API error for '{prompt_name}': {exc}"
                 ) from exc
+
+        # Reset rate limit retry counter on exhaust
+        if hasattr(self, "_quota_retries"):
+            delattr(self, "_quota_retries")
 
         # Exhausted retries
         raise ParsingException(

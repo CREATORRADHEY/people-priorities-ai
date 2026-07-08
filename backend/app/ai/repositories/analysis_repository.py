@@ -76,7 +76,6 @@ class FirestoreAnalysisRepository(BaseAnalysisRepository):
             docs = (
                 client.collection(_COLLECTION)
                 .where("submissionId", "==", submission_id)
-                .order_by("processedAt", direction="DESCENDING")
                 .limit(1)
                 .stream()
             )
