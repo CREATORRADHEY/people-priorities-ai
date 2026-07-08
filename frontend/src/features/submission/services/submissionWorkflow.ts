@@ -110,9 +110,19 @@ export class SubmissionWorkflow {
     } catch (error: any) {
       console.error('[SubmissionWorkflow] Submission sequence aborted:', error);
       onStateChange(SubmissionWorkflowState.ERROR);
+
+      // Extract the real backend detail from an Axios HTTP error response.
+      // Falls back through: backend detail → axios message → generic string
+      const backendDetail =
+        error?.response?.data?.detail ||
+        error?.response?.data?.message ||
+        null;
+      const displayError = backendDetail || error.message || 'An unexpected error occurred during submission.';
+
+      console.error('[SubmissionWorkflow] Display error:', displayError);
       return {
         success: false,
-        error: error.message || 'An unexpected error occurred during submission.'
+        error: displayError
       };
     }
   }
